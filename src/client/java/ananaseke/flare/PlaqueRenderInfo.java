@@ -1,12 +1,13 @@
 package ananaseke.flare;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class PlaqueRenderInfo {
     private Text message;
     private Identifier backgroundIdentifier;
-    private Identifier plaqueItemIdentifier;
+    private ItemStack plaqueItemStack;
     private long displayUntil;
 
     public PlaqueRenderInfo() {
@@ -22,14 +23,14 @@ public class PlaqueRenderInfo {
         return backgroundIdentifier;
     }
 
-    public Identifier getPlaqueItemIdentifier() {
-        return plaqueItemIdentifier;
+    public ItemStack getPlaqueItemStack() {
+        return plaqueItemStack;
     }
 
-    public void setData(Text message, Identifier backgroundIdentifier, Identifier plaqueItemIdentifier, long displayTimeMs) {
+    public void setData(Text message, Identifier backgroundIdentifier, ItemStack plaqueItemStack, long displayTimeMs) {
         this.message = message;
         this.backgroundIdentifier = backgroundIdentifier;
-        this.plaqueItemIdentifier = plaqueItemIdentifier;
+        this.plaqueItemStack = plaqueItemStack;
         this.displayUntil = System.currentTimeMillis() + displayTimeMs;
     }
 

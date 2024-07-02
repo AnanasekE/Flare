@@ -5,6 +5,12 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -29,12 +35,37 @@ public class FlareClient implements ClientModInitializer {
             LOGGER.info("Received message: " + message.getString());
             Text mess = Text.of(message.getString());
 
-            if (mess.contains(Text.of("SKILL LEVEL UP"))) {
-                // render the texture
+            if (mess.getString().contains("SKILL LEVEL UP")) {
+                if (mess.getString().length() < 5) return true;
+                LOGGER.info(String.valueOf(mess.getString().split(" ").length));
+                String skillName = mess.getString().split(" ")[3].toLowerCase();
+                String level = mess.getString().split(" ")[4];
+                ItemStack plaqueItemStack;
+
+                switch (skillName) {
+                    case "combat" -> plaqueItemStack = new ItemStack(Items.DIAMOND_SWORD);
+                    case "mining" -> plaqueItemStack = new ItemStack(Items.DEEPSLATE);
+                    case "farming" -> plaqueItemStack = new ItemStack(Items.WHEAT);
+                    case "foraging" -> plaqueItemStack = new ItemStack(Items.OAK_LOG);
+                    case "fishing" -> plaqueItemStack = new ItemStack(Items.COD);
+                    case "enchanting" -> plaqueItemStack = new ItemStack(Items.ENCHANTING_TABLE);
+                    case "taming" -> plaqueItemStack = new ItemStack(Items.WARDEN_SPAWN_EGG);
+                    case "alchemy" -> plaqueItemStack = new ItemStack(Items.POTION);
+                    case "dungeoneering" -> plaqueItemStack = new ItemStack(Items.WITHER_SKELETON_SKULL);
+                    case "carpentry" -> plaqueItemStack = new ItemStack(Items.CRAFTING_TABLE);
+                    case "social" -> plaqueItemStack = new ItemStack(Items.EMERALD);
+                    case "runecrafting" -> plaqueItemStack = new ItemStack(Items.MAGMA_CREAM);
+                    default -> plaqueItemStack = new ItemStack(Items.BARRIER);
+                }
+
+                String capitalizedSkillName = skillName.substring(0, 1).toUpperCase() + skillName.substring(1);
+
+
+
                 plaqueRenderInfo.setData(
-                        Text.of("Farming skill leveled up XI -> XII"),
-                        Identifier.of("flare", "textures/gui/test.png"),
-                        Identifier.of("minecraft", "textures/item/wheat.png"),
+                        Text.of(capitalizedSkillName + " skill leveled up " + level),
+                        Identifier.of("flare", "textures/gui/plaque_background.png"),
+                        plaqueItemStack,
                         5000
                 );
             }
@@ -42,38 +73,67 @@ public class FlareClient implements ClientModInitializer {
             return true;
         });
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-            if (plaqueRenderInfo.shouldRender()) renderPlaque(drawContext, plaqueRenderInfo);
+            if (plaqueRenderInfo.shouldRender()) renderLevelUp(drawContext, plaqueRenderInfo);
         });
     }
 
-    public void renderPlaque(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo) {
+    public void renderLevelUp(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo) {
         MinecraftClient client = MinecraftClient.getInstance();
         int width = client.getWindow().getScaledWidth();
         int height = client.getWindow().getScaledHeight();
 
 
         int mod = 2;
-        int sourceWidth = 96;
-        int sourceHeight = 38;
-        int backgroundWidth = sourceWidth * mod;
-        int backgroundHeight = sourceHeight * mod;
-        int x = (width - backgroundWidth) / 2;
-        int y = height / 4;
+        int backgroundWidth = 96 * mod;
+        int backgroundHeight = 38 * mod;
+        int backgroundX = (width - backgroundWidth) / 2;
+        int backgroundY = height / 4;
 
-        // Draw plaque background
+        renderBackground(drawContext, plaqueRenderInfo, backgroundWidth, backgroundHeight, backgroundX, backgroundY);
+        renderPlaque(drawContext, plaqueRenderInfo, client, width, height, mod);
+        renderMessage(drawContext, plaqueRenderInfo, client, backgroundWidth, backgroundHeight, backgroundX, backgroundY);
+
+
+    }
+
+    private static void renderBackground(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo, int backgroundWidth, int backgroundHeight, int backgroundX, int backgroundY) {
         drawContext.drawTexture(
                 plaqueRenderInfo.getBackgroundIdentifier(),
-                x, y,
+                backgroundX, backgroundY,
                 0, 0,
                 backgroundWidth, backgroundHeight,
-                sourceWidth, sourceHeight
+                backgroundWidth, backgroundHeight
         );
+    }
 
-        // Draw the message
-        int textX = x + (backgroundWidth / 2) - (client.textRenderer.getWidth(plaqueRenderInfo.getMessage()) / 2);
-        int textY = y + (backgroundHeight / 2) - (client.textRenderer.fontHeight / 2);
-        drawContext.drawText(client.textRenderer, plaqueRenderInfo.getMessage(), textX, textY, 0xFFFFFF, false);
+    private static void renderMessage(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo, MinecraftClient client, int backgroundWidth, int backgroundHeight, int backgroundX, int backgroundY) {
+        int textX = backgroundX + (backgroundWidth / 2) - (client.textRenderer.getWidth(plaqueRenderInfo.getMessage()) / 2);
+        int textY = backgroundY + (backgroundHeight / 2) - (client.textRenderer.fontHeight / 2) + 18;
+        drawContext.drawText(client.textRenderer, plaqueRenderInfo.getMessage(), textX, textY, 0xFFFFFF, true);
+    }
 
+    private static void renderPlaque(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo, MinecraftClient client, int width, int height, int mod) {
+        int itemWidth = 12 * mod;
+        int itemX = (width - itemWidth) / 2;
+        int itemY = (height / 4) + 11;
+
+        float itemMod = 1.75F;
+        ItemStack stack = plaqueRenderInfo.getPlaqueItemStack();
+        BakedModel bakedModel = client.getItemRenderer().getModel(stack, client.world, client.player, 0);
+        drawContext.getMatrices().push();
+        drawContext.getMatrices().translate(itemX + (8 * itemMod) - 2, itemY + (8 * itemMod), (float) (150));
+        drawContext.getMatrices().scale(16.0F * itemMod, -16.0F * itemMod, 16.0F * itemMod);
+
+        boolean bl = !bakedModel.isSideLit();
+        if (bl) {
+            DiffuseLighting.disableGuiDepthLighting();
+        }
+        client.getItemRenderer().renderItem(stack, ModelTransformationMode.GUI, false, drawContext.getMatrices(), drawContext.getVertexConsumers(), 15728880, OverlayTexture.DEFAULT_UV, bakedModel);
+        drawContext.draw();
+        if (bl) {
+            DiffuseLighting.enableGuiDepthLighting();
+        }
+        drawContext.getMatrices().pop();
     }
 
 
