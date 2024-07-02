@@ -17,6 +17,9 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public class FlareClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("flare");
     private final PlaqueRenderInfo plaqueRenderInfo = new PlaqueRenderInfo();
@@ -33,14 +36,18 @@ public class FlareClient implements ClientModInitializer {
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
 
             LOGGER.info("Received message: " + message.getString());
-            Text mess = Text.of(message.getString());
+
+            Text mess = Text.of(message.getString().stripLeading());
 
             if (mess.getString().contains("SKILL LEVEL UP")) {
-                LOGGER.info(String.valueOf(mess.getString().split(" ").length));
-                if (mess.getString().split(" ").length < 11) return true;
-                LOGGER.info(String.valueOf(mess.getString().split(" ").length));
-                String skillName = mess.getString().split(" ")[6].toLowerCase();
-                String level = mess.getString().split(" ")[8] + mess.getString().split(" ")[9] + mess.getString().split(" ")[10];
+
+                if (mess.getString().split(" ").length < 5) return true;
+
+                //remove first 4 charachters from mess
+                mess = Text.of(mess.getString().substring(4));
+
+                String skillName = mess.getString().split(" ")[3].toLowerCase().substring(2);
+                String level = mess.getString().split(" ")[4].substring(2).replaceFirst("(§[0-9a-fklmnor])", "");
                 ItemStack plaqueItemStack;
 
                 switch (skillName) {

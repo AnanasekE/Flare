@@ -1,3 +1,9 @@
 SKILL LEVEL UP {SKILL_NAME} I->II
 �b�lSKILL LEVEL UP �3Farming �8III?�3IV
 §b§lSKILL LEVEL UP §3Farming §8III->§3IV
+literal{  }[style={!strikethrough}, siblings=[literal{§b§lSKILL LEVEL UP §3Farming §8V➜§3VI}[style={!strikethrough,clickEvent=ClickEvent{action=RUN_COMMAND, value='/viewskill FARMING'},hoverEvent=EventData[action=<action show_text>, value=literal{Click to view your Farming Skill
+}[style={color=#FFFF55,!bold,!italic,!underlined,!strikethrough,!obfuscated}, siblings=[literal{progress!}[style={color=#FFFF55,!bold,!italic,!underlined,!strikethrough,!obfuscated}]]]]}]]]
+(flare) Received message: [, , �b�lSKILL, LEVEL, UP, �3Farming, �8VI?�3VII]
+
+
+
