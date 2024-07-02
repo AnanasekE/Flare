@@ -36,10 +36,11 @@ public class FlareClient implements ClientModInitializer {
             Text mess = Text.of(message.getString());
 
             if (mess.getString().contains("SKILL LEVEL UP")) {
-                if (mess.getString().length() < 5) return true;
                 LOGGER.info(String.valueOf(mess.getString().split(" ").length));
-                String skillName = mess.getString().split(" ")[3].toLowerCase();
-                String level = mess.getString().split(" ")[4];
+                if (mess.getString().split(" ").length < 11) return true;
+                LOGGER.info(String.valueOf(mess.getString().split(" ").length));
+                String skillName = mess.getString().split(" ")[6].toLowerCase();
+                String level = mess.getString().split(" ")[8] + mess.getString().split(" ")[9] + mess.getString().split(" ")[10];
                 ItemStack plaqueItemStack;
 
                 switch (skillName) {
@@ -61,13 +62,7 @@ public class FlareClient implements ClientModInitializer {
                 String capitalizedSkillName = skillName.substring(0, 1).toUpperCase() + skillName.substring(1);
 
 
-
-                plaqueRenderInfo.setData(
-                        Text.of(capitalizedSkillName + " skill leveled up " + level),
-                        Identifier.of("flare", "textures/gui/plaque_background.png"),
-                        plaqueItemStack,
-                        5000
-                );
+                plaqueRenderInfo.setData(Text.of(capitalizedSkillName + " skill leveled up " + level), Identifier.of("flare", "textures/gui/plaque_background.png"), plaqueItemStack, 5000);
             }
 
             return true;
@@ -97,13 +92,7 @@ public class FlareClient implements ClientModInitializer {
     }
 
     private static void renderBackground(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo, int backgroundWidth, int backgroundHeight, int backgroundX, int backgroundY) {
-        drawContext.drawTexture(
-                plaqueRenderInfo.getBackgroundIdentifier(),
-                backgroundX, backgroundY,
-                0, 0,
-                backgroundWidth, backgroundHeight,
-                backgroundWidth, backgroundHeight
-        );
+        drawContext.drawTexture(plaqueRenderInfo.getBackgroundIdentifier(), backgroundX, backgroundY, 0, 0, backgroundWidth, backgroundHeight, backgroundWidth, backgroundHeight);
     }
 
     private static void renderMessage(DrawContext drawContext, PlaqueRenderInfo plaqueRenderInfo, MinecraftClient client, int backgroundWidth, int backgroundHeight, int backgroundX, int backgroundY) {

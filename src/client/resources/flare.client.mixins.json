@@ -1,11 +1,15 @@
 {
-	"required": true,
-	"package": "ananaseke.flare.mixin.client",
-	"compatibilityLevel": "JAVA_21",
-	"client": [
-		"ExampleClientMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "ananaseke.flare.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ExampleClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ChatHudAccessor",
+    "ChatHudMixin"
+  ]
 }
