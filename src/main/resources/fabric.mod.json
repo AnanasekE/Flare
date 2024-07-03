@@ -19,7 +19,7 @@
 			"ananaseke.flare.Flare"
 		],
 		"client": [
-			"ananaseke.flare.FlareClient"
+          "ananaseke.flare.FlareClient"
 		]
 	},
 	"mixins": [

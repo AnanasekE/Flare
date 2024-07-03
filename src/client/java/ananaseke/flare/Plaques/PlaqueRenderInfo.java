@@ -1,4 +1,4 @@
-package ananaseke.flare;
+package ananaseke.flare.Plaques;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
