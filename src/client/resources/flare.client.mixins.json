@@ -10,6 +10,10 @@
   },
   "mixins": [
     "ChatHudAccessor",
-    "ChatHudMixin"
+    "ChatHudMixin",
+    "DoubleSliderCallbacksMixin",
+    "HealthBarMixin",
+    "NewHealthBarMixin",
+    "TooltipMixin"
   ]
 }
