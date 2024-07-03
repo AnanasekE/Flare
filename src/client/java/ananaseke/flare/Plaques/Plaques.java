@@ -30,7 +30,7 @@ public class Plaques {
 //		});
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
 
-            LOGGER.info("Received message: " + message.getString());
+//            LOGGER.info("Received message: " + message.getString());
 
             Text mess = Text.of(message.getString().stripLeading());
 
