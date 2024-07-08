@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 
-public class Fullbright{
+public class Fullbright {
 
     public static Logger LOGGER = Flare.LOGGER;
     public static KeyBinding keyBinding;
@@ -25,7 +25,7 @@ public class Fullbright{
                 "key.fullbright.toggle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
-                "category.fullbright.main"
+                "category.flare.main"
         ));
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client ->
