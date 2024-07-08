@@ -3,145 +3,129 @@ package ananaseke.flare.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.client.MinecraftClient;
+import com.google.gson.JsonSyntaxException;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 
 public class ItemPriceUtils {
-    private static final String BAZAAR_URL = APIUtils.API_KEY; // Replace with your actual URL
+    private static final String BAZAAR_URL = "https://api.hypixel.net/v2/skyblock/bazaar?API-Key=" + APIUtils.API_KEY; // Replace with your actual URL
     private static final Identifier BAZAAR_FILE_IDENTIFIER = Identifier.of("flare", "bazaar-data.json");
-
-    // Item check for AH or Bazaar
-    // Item price based on AH or Bazaar
-    // Update item prices - every 5 min or something
+    private static final File BAZAAR_DATA_FILE = new File(FabricLoader.getInstance().getConfigDir().toFile(), BAZAAR_FILE_IDENTIFIER.getPath());
 
     public static void updateBazaar() {
-        try {
-            InputStream bazaarData = MinecraftClient.getInstance().getResourceManager().getResource(BAZAAR_FILE_IDENTIFIER).get().getInputStream();
-            saveJsonToFile(BAZAAR_URL, bazaarData);
-        } catch (IOException e) {
-            System.err.println("Failed to get bazaar data: " + e.getMessage());
-        }
+        JsonElement jsonData = loadDataFromURL(BAZAAR_URL);
+        saveDataToFile(jsonData);
     }
 
     public static void updateAH() {
         // Implement the logic for updating AH prices
     }
 
-    public static Float getBazaarItemPrice(String internalName) {
+    public static Optional<Float> getBazaarItemPrice(String internalName) {
         try {
-            InputStream bazaarData = MinecraftClient.getInstance().getResourceManager().getResource(BAZAAR_FILE_IDENTIFIER).get().getInputStream();
-            JsonElement jsonElement = JsonParser.parseReader(new InputStreamReader(bazaarData));
+            // Parse the JSON file
+            JsonElement jsonElement = JsonParser.parseReader(new FileReader(BAZAAR_DATA_FILE));
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-            if (jsonObject.has("products") && jsonObject.get("products").getAsJsonObject().has(internalName)) {
-                JsonObject productObject = jsonObject.get("products").getAsJsonObject().get(internalName).getAsJsonObject();
-                if (productObject.has("sell_summary")) {
-                    float pricePerUnit = productObject.get("sell_summary").getAsJsonArray().get(0).getAsJsonObject().get("pricePerUnit").getAsFloat();
-                    return pricePerUnit;
-                }
+            // Check if the JSON contains necessary structures
+            if (!jsonObject.has("products")) {
+                System.err.println("Invalid JSON format: Missing 'products' field.");
+                return Optional.empty();
             }
+
+            JsonObject products = jsonObject.getAsJsonObject("products");
+
+            // Check if the product exists in the JSON data
+            if (!products.has(internalName)) {
+                System.err.println("Product '" + internalName + "' not found in JSON data.");
+                return Optional.empty();
+            }
+
+            JsonObject product = products.getAsJsonObject(internalName);
+
+            // Check if the product has sell_summary with pricePerUnit
+            if (!product.has("sell_summary")) {
+                System.err.println("Product '" + internalName + "' does not have 'sell_summary' field.");
+                return Optional.empty();
+            }
+
+            // Get the first sell summary (assuming there's at least one)
+            JsonElement sellSummary = product.getAsJsonArray("sell_summary").get(0);
+            float pricePerUnit = sellSummary.getAsJsonObject().get("pricePerUnit").getAsFloat();
+
+            return Optional.of(pricePerUnit);
+
         } catch (IOException e) {
-            System.err.println("Failed to get bazaar data: " + e.getMessage());
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    public static void saveDataToFile(JsonElement jsonData) {
+        if (jsonData == null) {
+            System.out.println("No data to save.");
+            return;
         }
 
-        return null;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BAZAAR_DATA_FILE))) {
+            writer.write(jsonData.toString());
+            System.out.println("Data saved to " + BAZAAR_DATA_FILE.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static Float getAHItemPrice(String internalName) {
-        // Implement the logic to get the AH item price
-        return 1.0F;
-    }
-
-    public static void saveJsonToFile(String urlString, InputStream inputStream) {
+    public static JsonElement loadDataFromURL(String urlString) {
         HttpURLConnection connection = null;
+        BufferedReader reader = null;
+
         try {
+            // Create a URL object
             URL url = new URL(urlString);
+
+            // Open a connection to the URL
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.connect();
+            connection.setRequestProperty("Accept", "application/json");
 
+            // Check the response code
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
                 throw new IOException("HTTP error code: " + responseCode);
             }
 
-            // Specify the path to the file where you want to save the JSON data
-            String filePath = "src/main/resources/bazaar-data.json";
-            try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    fileOutputStream.write(buffer, 0, bytesRead);
-                }
+            // Read the response
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder responseBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseBuilder.append(line);
             }
 
-        } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + e.getMessage());
-        } catch (IOException e) {
-            System.err.println("IOException: " + e.getMessage());
+            // Parse the JSON response
+            String jsonResponse = responseBuilder.toString();
+            return JsonParser.parseString(jsonResponse);
+
+        } catch (IOException | JsonSyntaxException e) {
+            e.printStackTrace();
+            return null;
         } finally {
+            // Close the connections
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             if (connection != null) {
                 connection.disconnect();
             }
         }
     }
-    // example bazaar-data.json
-//    {
-//        "success": true,
-//            "lastUpdated": 1590854517479,
-//            "products": {
-//        "INK_SACK:3": {
-//            "product_id": "INK_SACK:3",
-//                    "sell_summary": [
-//            {
-//                "amount": 20569,
-//                    "pricePerUnit": 4.2,
-//                    "orders": 1
-//            },
-//            {
-//                "amount": 140326,
-//                    "pricePerUnit": 3.8,
-//                    "orders": 2
-//            }
-//      ],
-//            "buy_summary": [
-//            {
-//                "amount": 640,
-//                    "pricePerUnit": 4.8,
-//                    "orders": 1
-//            },
-//            {
-//                "amount": 640,
-//                    "pricePerUnit": 4.9,
-//                    "orders": 1
-//            },
-//            {
-//                "amount": 25957,
-//                    "pricePerUnit": 5,
-//                    "orders": 3
-//            }
-//      ],
-//            "quick_status": {
-//                "productId": "INK_SACK:3",
-//                        "sellPrice": 4.2,
-//                        "sellVolume": 409855,
-//                        "sellMovingWeek": 8301075,
-//                        "sellOrders": 11,
-//                        "buyPrice": 4.99260315136572,
-//                        "buyVolume": 1254854,
-//                        "buyMovingWeek": 5830656,
-//                        "buyOrders": 85
-//            }
-//        }
-//    }
-//    }
-
 }

@@ -1,6 +1,7 @@
 package ananaseke.flare;
 
 import ananaseke.flare.Plaques.Plaques;
+import ananaseke.flare.Utils.ItemPriceUtils;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.overlays.ItemOverlays;
@@ -17,6 +18,7 @@ public class FlareClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("flare");
     public static final String MOD_ID = "flare";
 
+    private static boolean update = true;
 //    public static FilledMapItem map;
 //    public static boolean shouldRenderMap = false;
 
@@ -27,6 +29,14 @@ public class FlareClient implements ClientModInitializer {
         ItemOverlays.initialize();
         Info.initialize();
         AntiSpam.initialize();
+
+        // init bazaar stuff
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.world != null && update) { // update every time the game launches
+                ItemPriceUtils.updateBazaar();
+                update = false;
+            }
+        });
 
 //        ClientTickEvents.END_CLIENT_TICK.register(client -> {
 //            Item item = client.player.getInventory().getStack(9).getItem();
