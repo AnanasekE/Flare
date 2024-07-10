@@ -30,7 +30,7 @@ public abstract class ChatHudMixin {
         }
         ChatHudLine message = getMessageAt(mouseX, mouseY);
         if (message != null) {
-            String toCopy = String.valueOf(message.content());
+            String toCopy = String.valueOf(message.content().getString());
             client.keyboard.setClipboard(toCopy);
         }
     }

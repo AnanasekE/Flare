@@ -20,6 +20,17 @@ public class ItemUtils {
 
         }
         return Optional.empty();
+    }
 
+    public static Optional<String> getEnchantments(ItemStack stack) {
+        AtomicReference<String> returnVal = new AtomicReference<>();
+        if (stack.getComponents().get(DataComponentTypes.CUSTOM_DATA) != null) {
+            @Nullable NbtComponent customData = stack.getComponents().get(DataComponentTypes.CUSTOM_DATA);
+            if (customData == null) return Optional.empty();
+            customData.apply((nbtComponent) -> returnVal.set(nbtComponent.getString("enchantments")));
+            return Optional.of(returnVal.get());
+
+        }
+        return Optional.empty();
     }
 }

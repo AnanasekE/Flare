@@ -1,5 +1,6 @@
 package ananaseke.flare.mixin.client;
 
+import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.ItemPriceUtils;
 import ananaseke.flare.Utils.ItemUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,15 +25,46 @@ public class TooltipMixin {
     private void getTooltip(Item.TooltipContext context, @Nullable PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir) {
         ItemStack stack = (ItemStack) (Object) this; // Cast 'this' to ItemStack
         Optional<String> optionalInternalName = ItemUtils.getInternalName(stack); // Assuming getInternalName returns Optional<String>
+        List<Text> outList = cir.getReturnValue();
+
+//        minecraft:custom_data=>{enchantments:{infinite_quiver:6},id:"ENCHANTED_BOOK",timestamp:1720599363052L,uuid:"289a835d-1ddc-4930-a822-e7870411da23"}
+//        "product_id":"ENCHANTMENT_INFINITE_QUIVER_10"
+
+
+
 
         optionalInternalName.ifPresent(internalName -> {
-            ItemPriceUtils.getBazaarItemPrice(internalName).ifPresent(price -> {
+            ItemPriceUtils.getBazaarItemBuyPrice(internalName).ifPresent(price -> {
                 String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-                Text completed = Text.of("Lowest BIN price: " + formattedPrice);
-                List<Text> outList = cir.getReturnValue();
+                Text completed = Text.of("§6Buy Price: " + formattedPrice);
                 outList.add(completed);
-                cir.setReturnValue(outList);
             });
         });
+        optionalInternalName.ifPresent(internalName -> {
+            ItemPriceUtils.getBazaarItemSellPrice(internalName).ifPresent(price -> {
+                String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+                Text completed = Text.of("§6Sell Price: " + formattedPrice);
+                outList.add(completed);
+            });
+        });
+
+        if (KeyBinds.showMoreItemInfoKeybind.isPressed()) {
+            optionalInternalName.ifPresent(internalName -> {
+                ItemPriceUtils.getBazaarItemQuickBuyPrice(internalName).ifPresent(price -> {
+                    String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+                    Text completed = Text.of("§6Quick Buy Price: " + formattedPrice);
+                    outList.add(completed);
+                });
+            });
+            optionalInternalName.ifPresent(internalName -> {
+                ItemPriceUtils.getBazaarItemQuickSellPrice(internalName).ifPresent(price -> {
+                    String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+                    Text completed = Text.of("§6Quick Sell Price: " + formattedPrice);
+                    outList.add(completed);
+                });
+            });
+        }
+
+        cir.setReturnValue(outList);
     }
 }

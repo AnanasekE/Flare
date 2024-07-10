@@ -36,10 +36,8 @@ public class AntiSpam {
 //                    client.inGameHud.getChatHud().addMessage(Text.of(currentMessage + " (" + lastMessageCount + ")"));
 //                    LOGGER.info("Filtered duplicate message: " + currentMessage + " (" + lastMessageCount + ")");
 //                    return false;
-//                } else {
-//                    lastMessageCount = 1;
 //                }
-//
+//                lastMessageCount = 1;
 //                lastMessage = currentMessage;
 //                lastMessageSignature = currentSignature;
 //                return true;

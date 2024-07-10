@@ -25,7 +25,7 @@ public class Info {
 
     public static void initialize() {
         EntityTrackingEvents.START_TRACKING.register((trackedEntity, player) -> {
-            LOGGER.info(String.valueOf(trackedEntity.getCustomName()));
+//            LOGGER.info(String.valueOf(trackedEntity.getCustomName()));
         });
 
         // register keybind
@@ -69,8 +69,8 @@ public class Info {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding2.wasPressed()) {
-//                client.player.getMainHandStack().getComponents().forEach(component -> LOGGER.info(component.toString()));
-                if (!client.player.getMainHandStack().getComponents().get(DataComponentTypes.CUSTOM_DATA).isEmpty()) {
+                client.player.getMainHandStack().getComponents().forEach(component -> LOGGER.info(component.toString()));
+                if (client.player.getMainHandStack().getComponents().get(DataComponentTypes.CUSTOM_DATA) != null) {
                    @Nullable NbtComponent customData = client.player.getMainHandStack().getComponents().get(DataComponentTypes.CUSTOM_DATA);
                     customData.apply((nbtComponent) -> {
                         LOGGER.info(nbtComponent.getString("id"));
