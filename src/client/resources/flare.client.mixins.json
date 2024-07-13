@@ -14,6 +14,8 @@
     "DoubleSliderCallbacksMixin",
     "HealthBarMixin",
     "NewHealthBarMixin",
-    "TooltipMixin"
+    "SoundSystemMixin",
+    "TooltipMixin",
+    "VisitorTooltipMixin"
   ]
 }

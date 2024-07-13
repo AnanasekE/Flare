@@ -1,40 +1,27 @@
 package ananaseke.flare;
 
 import ananaseke.flare.Plaques.Plaques;
-import ananaseke.flare.Utils.ItemPriceUtils;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.misc.ChatHider;
 import ananaseke.flare.overlays.ItemOverlays;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.sound.SoundExecutor;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.Item;
-import net.minecraft.client.render.*;
-import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
 
 public class FlareClient implements ClientModInitializer {
 
@@ -43,7 +30,6 @@ public class FlareClient implements ClientModInitializer {
 
     private static MinecraftClient client = MinecraftClient.getInstance();
 
-    private static boolean update = true;
     public static boolean shouldRender = false;
 //    public static FilledMapItem map;
 //    public static boolean shouldRenderMap = false;
@@ -81,9 +67,10 @@ public class FlareClient implements ClientModInitializer {
             }
         });
 
+
+
+
     }
-
-
 }
 
 

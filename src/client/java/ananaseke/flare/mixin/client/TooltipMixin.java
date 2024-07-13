@@ -1,8 +1,10 @@
 package ananaseke.flare.mixin.client;
 
+import ananaseke.flare.FlareClient;
 import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.ItemPriceUtils;
 import ananaseke.flare.Utils.ItemUtils;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,40 +32,60 @@ public class TooltipMixin {
 //        minecraft:custom_data=>{enchantments:{infinite_quiver:6},id:"ENCHANTED_BOOK",timestamp:1720599363052L,uuid:"289a835d-1ddc-4930-a822-e7870411da23"}
 //        "product_id":"ENCHANTMENT_INFINITE_QUIVER_10"
 
+        if (optionalInternalName.isEmpty()) return;
+        String internalName = optionalInternalName.get();
 
-
-
-        optionalInternalName.ifPresent(internalName -> {
-            ItemPriceUtils.getBazaarItemBuyPrice(internalName).ifPresent(price -> {
-                String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-                Text completed = Text.of("§6Buy Price: " + formattedPrice);
-                outList.add(completed);
-            });
-        });
-        optionalInternalName.ifPresent(internalName -> {
-            ItemPriceUtils.getBazaarItemSellPrice(internalName).ifPresent(price -> {
-                String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-                Text completed = Text.of("§6Sell Price: " + formattedPrice);
-                outList.add(completed);
-            });
-        });
-
-        if (KeyBinds.showMoreItemInfoKeybind.isPressed()) {
-            optionalInternalName.ifPresent(internalName -> {
-                ItemPriceUtils.getBazaarItemQuickBuyPrice(internalName).ifPresent(price -> {
-                    String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-                    Text completed = Text.of("§6Quick Buy Price: " + formattedPrice);
-                    outList.add(completed);
-                });
-            });
-            optionalInternalName.ifPresent(internalName -> {
-                ItemPriceUtils.getBazaarItemQuickSellPrice(internalName).ifPresent(price -> {
-                    String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-                    Text completed = Text.of("§6Quick Sell Price: " + formattedPrice);
-                    outList.add(completed);
-                });
-            });
+        if (internalName.equals("ENCHANTED_BOOK")) {
+            if (ItemUtils.getEnchantments(stack).isPresent()) {
+//                FlareClient.LOGGER.info("Enchantments: " + ItemUtils.getEnchantments(stack).get());
+            }
         }
+
+        ItemPriceUtils.getBazaarItemBuyPrice(internalName).ifPresent(price -> {
+            String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+            Text completed = Text.of("§6Buy Price: " + formattedPrice);
+            outList.add(completed);
+        });
+
+        ItemPriceUtils.getBazaarItemSellPrice(internalName).ifPresent(price -> {
+            String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+            Text completed = Text.of("§6Sell Price: " + formattedPrice);
+            outList.add(completed);
+        });
+
+
+//
+//        optionalInternalName.ifPresent(internalName -> {
+//            ItemPriceUtils.getBazaarItemBuyPrice(internalName).ifPresent(price -> {
+//                String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+//                Text completed = Text.of("§6Buy Price: " + formattedPrice);
+//                outList.add(completed);
+//            });
+//        });
+//        optionalInternalName.ifPresent(internalName -> {
+//            ItemPriceUtils.getBazaarItemSellPrice(internalName).ifPresent(price -> {
+//                String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+//                Text completed = Text.of("§6Sell Price: " + formattedPrice);
+//                outList.add(completed);
+//            });
+//        });
+//
+//        if (KeyBinds.showMoreItemInfoKeybind.isPressed()) {
+//            optionalInternalName.ifPresent(internalName -> {
+//                ItemPriceUtils.getBazaarItemQuickBuyPrice(internalName).ifPresent(price -> {
+//                    String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+//                    Text completed = Text.of("§6Quick Buy Price: " + formattedPrice);
+//                    outList.add(completed);
+//                });
+//            });
+//            optionalInternalName.ifPresent(internalName -> {
+//                ItemPriceUtils.getBazaarItemQuickSellPrice(internalName).ifPresent(price -> {
+//                    String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
+//                    Text completed = Text.of("§6Quick Sell Price: " + formattedPrice);
+//                    outList.add(completed);
+//                });
+//            });
+//        }
 
         cir.setReturnValue(outList);
     }
