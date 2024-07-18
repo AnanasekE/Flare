@@ -1,22 +1,26 @@
 package ananaseke.flare.overlays;
 
+import ananaseke.flare.KeyBinds;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 public class ItemOverlays {
 
     public static TimedOverlay JungleAxeOverlay = new TimedOverlay();
+    public static TimedOverlay AgaricusCapOverlay = new TimedOverlay();
     public static int screenHeight;
     public static int screenWidth;
 
-    public static void initialize(){
-        jungleAxe();
+    public static void initialize() {
+        overlays();
     }
 
-    private static void jungleAxe() {
+    private static void overlays() {
         ClientPlayerBlockBreakEvents.AFTER.register((world, player, pos, state) -> {
             assert MinecraftClient.getInstance().world != null;
             BlockState oldState = MinecraftClient.getInstance().world.getBlockState(pos);
@@ -28,20 +32,32 @@ public class ItemOverlays {
             }
         });
 
-        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
-            if (JungleAxeOverlay.shouldRender()) {
-                screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
-                screenWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
-                int centerX = screenWidth / 2;
-                int centerY = screenHeight / 2;
-                int maxHeight = 25;
-                int width = 5;
-                float progress = JungleAxeOverlay.getTimeLeftPercentage();
-                int height = (int) (maxHeight * progress);
-                int x = centerX + 10;
-                int y = centerY - (height / 2);
-                drawContext.fill(x, y, x + width, y + height, 0x80FF0000);
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (KeyBinds.devKeybind.wasPressed()) {
             }
         });
+
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+            if (JungleAxeOverlay.shouldRender()) {
+                renderTimedOverlay(drawContext, JungleAxeOverlay);
+            }
+            if (AgaricusCapOverlay.shouldRender()) {
+                renderTimedOverlay(drawContext, AgaricusCapOverlay);
+            }
+        });
+    }
+
+    private static void renderTimedOverlay(DrawContext drawContext, TimedOverlay timedOverlay) {
+        screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
+        screenWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
+        int centerX = screenWidth / 2;
+        int centerY = screenHeight / 2;
+        int maxHeight = 25;
+        int width = 5;
+        float progress = timedOverlay.getTimeLeftPercentage();
+        int height = (int) (maxHeight * progress);
+        int x = centerX + 10;
+        int y = centerY - (height / 2);
+        drawContext.fill(x, y, x + width, y + height, 0x80FF0000);
     }
 }

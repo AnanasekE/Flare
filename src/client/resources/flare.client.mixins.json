@@ -12,6 +12,7 @@
     "ChatHudAccessor",
     "ChatHudMixin",
     "DoubleSliderCallbacksMixin",
+    "EntityMixin",
     "HealthBarMixin",
     "NewHealthBarMixin",
     "SoundSystemMixin",

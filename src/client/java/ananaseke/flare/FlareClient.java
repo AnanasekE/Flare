@@ -8,8 +8,12 @@ import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.misc.ChatHider;
 import ananaseke.flare.overlays.ItemOverlays;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
@@ -19,9 +23,13 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 public class FlareClient implements ClientModInitializer {
 
@@ -46,19 +54,10 @@ public class FlareClient implements ClientModInitializer {
         VisitorTracker.initialize();
 
 
-        KeyBinding keybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.highlight_entities",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_HOME,
-                "category.flare.main"
-        ));
+
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-            if (keybind.wasPressed()) {
-                shouldRender = !shouldRender;
-                client.player.sendMessage(Text.of("Changed shouldRender to " + shouldRender), false);
-            }
-            if (shouldRender) {
+            if (KeyBinds.highlightEntitiesBoxToggle) {
                 client.world.getEntities().forEach(entity -> {
 //                    LOGGER.info(entity.getName().getString());
                     if (entity instanceof ClientPlayerEntity) return;
@@ -67,7 +66,20 @@ public class FlareClient implements ClientModInitializer {
             }
         });
 
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+//            if (client.player != null) {
+//                client.player.networkHandler.getListedPlayerListEntries().forEach(entry -> {
+//                    if (entry.getDisplayName() != null) {
+//                        LOGGER.info(entry.getDisplayName().getString());
+//                    }
+//                });
+//            }
+        });
 
+
+//        ClientTickEvents.END_CLIENT_TICK.register(client1 -> {
+//            dev();
+//        });
 
 
     }

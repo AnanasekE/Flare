@@ -19,6 +19,13 @@ public class KeyBinds {
     public static KeyBinding showMoreItemInfoKeybind;
     public static KeyBinding devKeybind;
     public static boolean devKeybindToggle;
+    public static KeyBinding openEChestKeybind;
+    public static KeyBinding openPetMenu;
+    public static KeyBinding highlightEntitesGlow;
+    public static boolean highlightEntitesGlowToggle;
+    public static KeyBinding highlightEntitiesBox;
+    public static boolean highlightEntitiesBoxToggle;
+
 
     public static void initialize() {
         showMoreItemInfoKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -35,10 +42,48 @@ public class KeyBinds {
                 "category.flare.main"
         ));
 
+        openEChestKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.open_ec",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_B,
+                "category.flare.main"
+        ));
+
+        openPetMenu = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.open_pet_menu",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_N,
+                "category.flare.main"
+        ));
+
+        highlightEntitesGlow = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.highlight_entities_glow",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_HOME,
+                "category.flare.main"
+        ));
+
+        highlightEntitiesBox = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.highlight_entities",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_HOME,
+                "category.flare.main"
+        ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (devKeybind.wasPressed()) {
                 devKeybindToggle = !devKeybindToggle;
-                MinecraftClient.getInstance().player.sendMessage(Text.of("Changed devKeybindToggle to " + devKeybindToggle), false);
+                client.player.sendMessage(Text.of("Changed devKeybindToggle to " + devKeybindToggle), false);
+            }
+
+            if (highlightEntitiesBox.wasPressed()) {
+                highlightEntitiesBoxToggle = !highlightEntitiesBoxToggle;
+                client.player.sendMessage(Text.of("Changed highlightEntitiesBoxToggle to " + highlightEntitiesBoxToggle), false);
+            }
+
+            if (highlightEntitesGlow.wasPressed()) {
+                highlightEntitesGlowToggle = !highlightEntitesGlowToggle;
+                client.player.sendMessage(Text.of("Changed highlightEntitesGlowToggle to " + highlightEntitesGlowToggle), false);
             }
         });
 

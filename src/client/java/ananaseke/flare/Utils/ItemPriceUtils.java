@@ -247,7 +247,10 @@ public class ItemPriceUtils {
         } catch (JsonSyntaxException exception) {
             LOGGER.warn("Failed to parse JSON data from file: " + exception.getMessage());
         }
-        return jsonElement.getAsJsonObject();
+        if (jsonElement != null) {
+            return jsonElement.getAsJsonObject();
+        }
+        return null;
     }
 
     public static void saveDataToFile(JsonElement jsonData) {

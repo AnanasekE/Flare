@@ -14,6 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class VisitorTracker {
     private static final List<VisitorItem> requiredItems = new ArrayList<>();
@@ -72,7 +73,7 @@ public class VisitorTracker {
 
         // not working, doesn't even trigger
         ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
-            if (message.getLiteralString().contains("OFFER ACCEPTED with")) {
+            if (Objects.requireNonNull(message.getLiteralString()).contains("OFFER ACCEPTED with")) {
                 String[] split = message.getString().split(" ");
                 FlareClient.LOGGER.info(Arrays.stream(split).reduce((s1, s2) -> s1 + " " + s2).get());
                 String visitorName = split[3];
