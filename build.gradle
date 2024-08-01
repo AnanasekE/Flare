@@ -19,7 +19,6 @@ repositories {
 
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
-
 }
 
 loom {
@@ -44,6 +43,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	modApi "me.shedaniel.cloth:cloth-config-fabric:15.0.128"
+	modApi "com.terraformersmc:modmenu:11.0.1"
+
 
 }
 

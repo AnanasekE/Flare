@@ -1,8 +1,10 @@
 package ananaseke.flare.misc;
 
+import ananaseke.flare.Flare;
 import ananaseke.flare.FlareClient;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -12,11 +14,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class AntiSpam {
-//    private static int lastMessageCount = 1;
+    //    private static int lastMessageCount = 1;
 //    private static final Logger LOGGER = FlareClient.LOGGER;
 //    private static String lastMessage = "";
 //    private static MessageSignatureData lastMessageSignature = null;
 //    private static final Lock lock = new ReentrantLock();
+
+
+//    private static MessageSignatureData messageSignatureData;
+//    private static Integer consecutiveMessageCount = 1;
 
     public static void initialize() {
 //        ClientReceiveMessageEvents.ALLOW_CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
@@ -44,6 +50,28 @@ public class AntiSpam {
 //            } finally {
 //                lock.unlock();
 //            }
+//        });
+
+
+//        ClientReceiveMessageEvents.ALLOW_CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
+//            MinecraftClient client = MinecraftClient.getInstance();
+//            ChatHud chatHud = client.inGameHud.getChatHud();
+//            FlareClient.LOGGER.info("Message: " + message.getString());
+//            if (signedMessage == null) return true;
+//            FlareClient.LOGGER.info("Message: " + message.getString() + " Signature: " + signedMessage.signature());
+//
+//            if (messageSignatureData == null) return true;
+//            if (messageSignatureData.equals(signedMessage.signature())) {
+//                chatHud.removeMessage(messageSignatureData);
+//                chatHud.addMessage(Text.of(message.getString() + " (" + consecutiveMessageCount + ")"));
+//                consecutiveMessageCount += 1;
+//                return false;
+//            }
+//            consecutiveMessageCount = 1;
+//
+//            messageSignatureData = signedMessage.signature();
+//
+//            return true;
 //        });
     }
 }

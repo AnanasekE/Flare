@@ -73,7 +73,8 @@ public class VisitorTracker {
 
         // not working, doesn't even trigger
         ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
-            if (Objects.requireNonNull(message.getLiteralString()).contains("OFFER ACCEPTED with")) {
+            if (message.getLiteralString() == null) return;
+            if (message.getLiteralString().contains("OFFER ACCEPTED with")) {
                 String[] split = message.getString().split(" ");
                 FlareClient.LOGGER.info(Arrays.stream(split).reduce((s1, s2) -> s1 + " " + s2).get());
                 String visitorName = split[3];

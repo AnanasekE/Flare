@@ -20,7 +20,11 @@
 		],
 		"client": [
           "ananaseke.flare.FlareClient"
+		],
+		"modmenu": [
+			"ananaseke.flare.ModMenuIntegration"
 		]
+
 	},
 	"mixins": [
 		"flare.mixins.json",

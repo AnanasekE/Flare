@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.flare.title": "Flare Config",
+  "text.autoconfig.flare.option.shouldRenderDungeonMap": "Render Dungeon Map",
+  "key.flare.open_ec": "Open Enderchest",
+  "key.flare.open_pet_menu": "Open Pet Menu",
+  "key.flare.open_config_menu": "Open Config Menu",
+  "category.flare.main": "Flare"
+}

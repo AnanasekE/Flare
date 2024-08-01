@@ -1,7 +1,10 @@
 package ananaseke.flare;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -19,8 +22,6 @@ public class KeyBinds {
     public static boolean highlightEntitiesBoxToggle;
     public static KeyBinding highlightEntitiesColor;
     public static boolean highlightEntitiesColorToggle;
-    public static KeyBinding renderCustomHealthBar;
-    public static boolean renderCustomHealthBarToggle = true;
 
     public static KeyBinding openConfigScreen;
 
@@ -75,14 +76,6 @@ public class KeyBinds {
                 "category.flare.main"
         ));
 
-        renderCustomHealthBar = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.render_custom_healthbar",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_Y,
-                "category.flare.main"
-        ));
-
-
         openConfigScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.flare.open_config_menu",
                 InputUtil.Type.KEYSYM,
@@ -111,16 +104,10 @@ public class KeyBinds {
                 client.player.sendMessage(Text.of("Changed highlightEntitesColorToggle to " + highlightEntitiesColorToggle), false);
             }
 
-            if (renderCustomHealthBar.wasPressed()) {
-                renderCustomHealthBarToggle = !renderCustomHealthBarToggle;
-                client.player.sendMessage(Text.of("Changed renderCustomHealthBarToggle to " + renderCustomHealthBarToggle), false);
-
-            }
 
             while (openConfigScreen.wasPressed()) {
-                Config config = new Config();
-                config.createConfig();
-                config.setScreen(config.configScreen);
+                Screen configScreen = AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get();
+                MinecraftClient.getInstance().setScreen(configScreen);
             }
         });
 
