@@ -1,13 +1,17 @@
 package ananaseke.flare.mixin.client;
 
+import ananaseke.flare.KeyBinds;
 import ananaseke.flare.overlays.HealthBar;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(InGameHud.class)
 public class NewHealthBarMixin {
@@ -27,12 +31,14 @@ public class NewHealthBarMixin {
         // The height of a health bar is 10 at Math.max(10 - (q - 2), 3)
         // at Math.max(j, i) we want the renderer to think there is only one line of hearts, so we return 10
         return 10;
+//        return KeyBinds.renderCustomHealthBarToggle ? 10 : Math.max(a, b);
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"), method = "renderStatusBars")
     public float fakeHealth(float a, float b) {
         // The renderer should there is only one health row so the armor is displayed at the right place
         return 10;
+//        return KeyBinds.renderCustomHealthBarToggle ? 10 : Math.max(a, b);
     }
 
     @Redirect(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getAbsorptionAmount()F"))
@@ -40,5 +46,6 @@ public class NewHealthBarMixin {
         // The renderer should think there is only one absorption row if the player has absorption
         // so the armor is displayed at the right place
         return 0;
+//        return KeyBinds.renderCustomHealthBarToggle ? 0 : ((PlayerEntity)MinecraftClient.getInstance().getCameraEntity()).getAbsorptionAmount();
     }
 }

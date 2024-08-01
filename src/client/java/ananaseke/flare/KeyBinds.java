@@ -1,19 +1,11 @@
 package ananaseke.flare;
 
-import ananaseke.flare.Utils.RenderUtils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
-
-import java.awt.*;
 
 public class KeyBinds {
     public static KeyBinding showMoreItemInfoKeybind;
@@ -25,6 +17,12 @@ public class KeyBinds {
     public static boolean highlightEntitesGlowToggle;
     public static KeyBinding highlightEntitiesBox;
     public static boolean highlightEntitiesBoxToggle;
+    public static KeyBinding highlightEntitiesColor;
+    public static boolean highlightEntitiesColorToggle;
+    public static KeyBinding renderCustomHealthBar;
+    public static boolean renderCustomHealthBarToggle = true;
+
+    public static KeyBinding openConfigScreen;
 
 
     public static void initialize() {
@@ -70,6 +68,28 @@ public class KeyBinds {
                 "category.flare.main"
         ));
 
+        highlightEntitiesColor = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.highlight_entities_color",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_MINUS,
+                "category.flare.main"
+        ));
+
+        renderCustomHealthBar = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.render_custom_healthbar",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_Y,
+                "category.flare.main"
+        ));
+
+
+        openConfigScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.open_config_menu",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_H,
+                "category.flare.main"
+        ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (devKeybind.wasPressed()) {
                 devKeybindToggle = !devKeybindToggle;
@@ -84,6 +104,23 @@ public class KeyBinds {
             if (highlightEntitesGlow.wasPressed()) {
                 highlightEntitesGlowToggle = !highlightEntitesGlowToggle;
                 client.player.sendMessage(Text.of("Changed highlightEntitesGlowToggle to " + highlightEntitesGlowToggle), false);
+            }
+
+            if (highlightEntitiesColor.wasPressed()) {
+                highlightEntitiesColorToggle = !highlightEntitiesColorToggle;
+                client.player.sendMessage(Text.of("Changed highlightEntitesColorToggle to " + highlightEntitiesColorToggle), false);
+            }
+
+            if (renderCustomHealthBar.wasPressed()) {
+                renderCustomHealthBarToggle = !renderCustomHealthBarToggle;
+                client.player.sendMessage(Text.of("Changed renderCustomHealthBarToggle to " + renderCustomHealthBarToggle), false);
+
+            }
+
+            while (openConfigScreen.wasPressed()) {
+                Config config = new Config();
+                config.createConfig();
+                config.setScreen(config.configScreen);
             }
         });
 

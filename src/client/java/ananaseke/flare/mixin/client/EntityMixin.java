@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class EntityMixin {
 
-    @Inject(method = "isGlowing", at = @At("RETURN"), cancellable = true)
-    public boolean isGlowing(CallbackInfoReturnable<Boolean> cir) {
-        if (KeyBinds.highlightEntitesGlowToggle) {
-//             && ((Entity)((Object)this)).getType() != EntityType.ARMOR_STAND
-            cir.setReturnValue(true);
-        }
-        return cir.getReturnValue();
-    }
+//    @Inject(method = "isGlowing", at = @At("RETURN"), cancellable = true)
+//    public boolean isGlowing(CallbackInfoReturnable<Boolean> cir) {
+//        if (KeyBinds.highlightEntitesGlowToggle) {
+////             && ((Entity)((Object)this)).getType() != EntityType.ARMOR_STAND
+//            cir.setReturnValue(true);
+//        }
+//        return cir.getReturnValue();
+//    }
 }
