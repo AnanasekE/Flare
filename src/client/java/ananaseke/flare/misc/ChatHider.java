@@ -1,22 +1,65 @@
 package ananaseke.flare.misc;
 
+import ananaseke.flare.Config;
+import ananaseke.flare.FlareClient;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 
 public class ChatHider {
     public static void initialize() {
-        ClientReceiveMessageEvents.ALLOW_CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
-//            if (message.contains(Text.of("You earned ")) && message.contains(Text.of("Event EXP from playing SkyBlock!"))) {
-//                return false;
-//            } else if (message.contains(Text.of("[NPC] Mort:"))) {
-//                return false;
-//            } else if (message.contains(Text.of("[BOSS] The Watcher: "))) {
-//
-//            } else if (message.contains(Text.of("+ Kill Combo ))) {
-//
-//            }
+        Config config = AutoConfig.getConfigHolder(Config.class).getConfig();
+
+
+        ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            FlareClient.LOGGER.info(message.getString());
+            String messageStr = message.getString();
+
+            if (messageStr.contains("You earned ") && messageStr.contains("Event EXP from playing SkyBlock!")) {
+                return false;
+            } else if (config.mortMessageHider && messageStr.contains("[NPC] Mort:")) {
+                return false;
+            } else if (config.bossMessageHider && (
+                    messageStr.contains("[BOSS] The Watcher: ") ||
+                            messageStr.contains("[BOSS] The Professor: ") ||
+                            messageStr.contains("[BOSS] Scarf: ") ||
+                            messageStr.contains("[BOSS] Bonzo: ") ||
+                            messageStr.contains("[BOSS] Necron: ")
+            )) {
+                return false;
+            } else if (config.killComboHider && messageStr.contains("Kill Combo")) {
+                return false;
+            } else if (config.killComboHider && messageStr.contains("Your Kill Combo has expired! You reached a ")) {
+                return false;
+            } else if (config.superboomHider && messageStr.contains("has obtained Superboom TNT!")) {
+                return false;
+            } else if (config.dungeonBuffHider && (
+                    messageStr.contains("DUNGEON BUFF!") ||
+                            messageStr.contains("     Also granted you") ||
+                            messageStr.contains("     Granted you") ||
+                            messageStr.contains("has obtained Blessing")
+            )) {
+                return false;
+            } else if (config.reviveStoneHider && messageStr.contains("has obtained Revive Stone!")) {
+                return false;
+            } else if (config.abilityHider && (
+                    messageStr.contains("is ready to use! Press DROP to activate it!") ||
+                            messageStr.contains("is now available!")
+            )) {
+                return false;
+            } else if (config.witherEssenceHider && messageStr.contains(" found a Wither Essence! Everyone gains an extra essence!")) {
+                return false;
+            } else if (config.abilityDamageHider && (
+                    messageStr.contains("Your Guided Sheep hit ") &&
+                            (messageStr.contains(" enemy for ") || messageStr.contains(" enemies for ")) &&
+                            messageStr.contains(" damage.")
+            )) {
+                return false;
+            }
+
             return true;
         });
+
     }
 }
 

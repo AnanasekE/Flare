@@ -11,10 +11,9 @@ import ananaseke.flare.overlays.ItemOverlays;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -32,13 +31,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FlareClient implements ClientModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("flare");
     public static final String MOD_ID = "flare";
+
+    private static Optional<Boolean> lastIsLower = Optional.empty();
 
     private static MinecraftClient client = MinecraftClient.getInstance();
 
@@ -128,13 +127,19 @@ public class FlareClient implements ClientModInitializer {
 
 //          70, 119
             Optional<BlockPos> chest = searchForChestAtY(box, 70);
-            Optional<BlockPos> chest2 = searchForChestAtY(box, 119);
+            Optional<BlockPos> chest2 = searchForChestAtY(box, 69);
 
-            if (chest.isPresent()) {
-                isLower = true;
-            } else if (chest2.isPresent()) {
-                isLower = false;
+            if (lastIsLower.isEmpty()) {
+                if (chest.isPresent()) {
+                    isLower = true;
+                } else if (chest2.isPresent()) {
+                    isLower = false;
+                }
+            } else {
+                isLower = lastIsLower.get();
             }
+
+
 
 
             // height is based on hp
@@ -157,9 +162,17 @@ public class FlareClient implements ClientModInitializer {
                 }
             }
 
-
+                // TODO: reset blaze after the dungeon ends and do not call islower check before the dungeonm ends
         });
+
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (message.getString().contains("entered The Catacombs,")) {
+                lastIsLower = Optional.empty();
+            }
+        });
+
     }
+
 
     private static Optional<BlockPos> searchForChestAtY(Box box, int y) {
         for (int x = (int) box.minX; x < box.maxX; x++) {

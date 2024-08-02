@@ -101,7 +101,7 @@ public class ItemPriceUtils {
 
             return Optional.of(pricePerUnit);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
