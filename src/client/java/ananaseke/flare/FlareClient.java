@@ -132,8 +132,10 @@ public class FlareClient implements ClientModInitializer {
             if (lastIsLower.isEmpty()) {
                 if (chest.isPresent()) {
                     isLower = true;
+                    lastIsLower = Optional.of(true);
                 } else if (chest2.isPresent()) {
                     isLower = false;
+                    lastIsLower = Optional.of(false);
                 }
             } else {
                 isLower = lastIsLower.get();
@@ -162,7 +164,6 @@ public class FlareClient implements ClientModInitializer {
                 }
             }
 
-                // TODO: reset blaze after the dungeon ends and do not call islower check before the dungeonm ends
         });
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {

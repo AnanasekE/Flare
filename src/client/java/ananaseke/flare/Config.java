@@ -28,7 +28,8 @@ public class Config implements ConfigData {
     public boolean witherEssenceHider = true;
     @ConfigEntry.Category(value = "Chat Hiders")
     public boolean abilityDamageHider = true;
-
+    @ConfigEntry.Category(value = "Chat Hiders")
+    public boolean crowdHider = true;
 
 
 }

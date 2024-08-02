@@ -12,7 +12,7 @@ public class ChatHider {
 
 
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
-            FlareClient.LOGGER.info(message.getString());
+//            FlareClient.LOGGER.info(message.getString());
             String messageStr = message.getString();
 
             if (messageStr.contains("You earned ") && messageStr.contains("Event EXP from playing SkyBlock!")) {
@@ -24,10 +24,13 @@ public class ChatHider {
                             messageStr.contains("[BOSS] The Professor: ") ||
                             messageStr.contains("[BOSS] Scarf: ") ||
                             messageStr.contains("[BOSS] Bonzo: ") ||
+                            messageStr.contains("[BOSS] Thorn: ") ||
                             messageStr.contains("[BOSS] Necron: ")
             )) {
                 return false;
             } else if (config.killComboHider && messageStr.contains("Kill Combo")) {
+                return false;
+            } else if (config.crowdHider && messageStr.contains("[CROWD]")) {
                 return false;
             } else if (config.killComboHider && messageStr.contains("Your Kill Combo has expired! You reached a ")) {
                 return false;
