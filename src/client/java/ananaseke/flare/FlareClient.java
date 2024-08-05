@@ -3,6 +3,7 @@ package ananaseke.flare;
 import ananaseke.flare.Plaques.Plaques;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.dungeons.DungeonMapRenderer;
+import ananaseke.flare.dungeons.Solvers;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.AntiSpam;
@@ -11,19 +12,17 @@ import ananaseke.flare.overlays.ItemOverlays;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.MapRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.MapIdComponent;
-import net.minecraft.entity.mob.BlazeEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ public class FlareClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("flare");
     public static final String MOD_ID = "flare";
 
-    private static Optional<Boolean> lastIsLower = Optional.empty();
 
     private static MinecraftClient client = MinecraftClient.getInstance();
 
@@ -57,7 +55,7 @@ public class FlareClient implements ClientModInitializer {
         ChatHider.initialize();
         VisitorTracker.initialize();
         DungeonMapRenderer.initialize();
-
+        Solvers.initialize();
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (KeyBinds.highlightEntitiesBoxToggle) {
@@ -97,94 +95,53 @@ public class FlareClient implements ClientModInitializer {
 
         });
 
-        WorldRenderEvents.AFTER_ENTITIES.register(worldRenderContext -> {
-            if (!config.dungeonHigherLowerSolver) return;
-//            HIGHER/LOWER SOLVER
-            BlazeEntity lowestBlaze;
-            BlazeEntity highestBlaze;
-            boolean isLower = true; // chest under y 75
-            List<BlazeEntity> blazes = new ArrayList<>();
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+            if (!config.showSlayerInfo) return;
+
+            PlayerEntity player = client.player;
+            if (player == null) return;
+            Box targetArea = new Box(player.getPos().add(-10, -10, -10), player.getPos().add(10, 10, 10));
+
+            List<LivingEntity> entities = new ArrayList<>();
+
+            assert client.world != null;
             client.world.getEntities().forEach(entity -> {
-                if (entity instanceof BlazeEntity) {
-                    if (entity.squaredDistanceTo(client.player) < 10000) {
-                        // if blaze is not already in the list
-                        blazes.add((BlazeEntity) entity);
+                if (entity instanceof LivingEntity) {
+                    if (targetArea.contains(entity.getPos())) {
+                        entities.add((LivingEntity) entity);
                     }
                 }
             });
 
-            // is in blaze
+            Optional<LivingEntity> OpSlayer = entities.stream().filter(livingEntity ->
+                    livingEntity.getName().getString().contains("Revenant Horror") ||
+                            livingEntity.getName().getString().contains("Tarantula Broodfather") ||
+                            livingEntity.getName().getString().contains("Sven Packmaster") ||
+                            livingEntity.getName().getString().contains("Voidgloom Seraph") ||
+                            livingEntity.getName().getString().contains("Riftstalker Bloodfiend") ||
+                            livingEntity.getName().getString().contains("Inferno Demonlord")
+            ).findFirst();
 
-            BlockPos playerPos = client.player.getBlockPos();
-            Box box = new Box(
-                    playerPos.getX() + 10,
-                    playerPos.getY() + 10,
-                    playerPos.getZ() + 10,
-                    playerPos.getX() - 10,
-                    playerPos.getY() - 10,
-                    playerPos.getZ() - 10
-            );
 
-//          70, 119
-            Optional<BlockPos> chest = searchForChestAtY(box, 70);
-            Optional<BlockPos> chest2 = searchForChestAtY(box, 69);
+            Optional<LivingEntity> OpMiniboss = entities.stream().filter(livingEntity ->
+                    livingEntity.getName().getString().contains("Revenant Champion") ||
+                            livingEntity.getName().getString().contains("Deformed Revenant")
+            ).findFirst();
 
-            if (lastIsLower.isEmpty()) {
-                if (chest.isPresent()) {
-                    isLower = true;
-                    lastIsLower = Optional.of(true);
-                } else if (chest2.isPresent()) {
-                    isLower = false;
-                    lastIsLower = Optional.of(false);
-                }
-            } else {
-                isLower = lastIsLower.get();
+            String slayerName;
+
+            if (OpSlayer.isPresent()) {
+                slayerName = OpSlayer.get().getName().getString();
+                RenderUtils.drawCenteredText(slayerName, config.slayerInfoVerticalOffset, drawContext);
             }
 
-
-
-
-            // height is based on hp
-            if (blazes.size() > 0) {
-                lowestBlaze = blazes.get(0);
-                highestBlaze = blazes.get(0);
-                for (BlazeEntity blaze : blazes) {
-                    if (blaze.getHealth() < lowestBlaze.getHealth()) {
-                        lowestBlaze = blaze;
-                    }
-                    if (blaze.getHealth() > highestBlaze.getHealth()) {
-                        highestBlaze = blaze;
-                    }
-                }
-
-                if (isLower) {
-                    RenderUtils.drawEntityBox(worldRenderContext, lowestBlaze);
-                } else {
-                    RenderUtils.drawEntityBox(worldRenderContext, highestBlaze);
-                }
+            if (OpMiniboss.isPresent()) {
+                RenderUtils.drawCenteredText("Miniboss", -75, drawContext);
             }
 
         });
 
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (message.getString().contains("entered The Catacombs,")) {
-                lastIsLower = Optional.empty();
-            }
-        });
 
-    }
-
-
-    private static Optional<BlockPos> searchForChestAtY(Box box, int y) {
-        for (int x = (int) box.minX; x < box.maxX; x++) {
-            for (int z = (int) box.minZ; z < box.maxZ; z++) {
-                BlockPos searchPos = new BlockPos(x, y, z);
-                if (client.world.getBlockEntity(searchPos) instanceof ChestBlockEntity) {
-                    return Optional.of(searchPos);
-                }
-            }
-        }
-        return Optional.empty();
     }
 
 

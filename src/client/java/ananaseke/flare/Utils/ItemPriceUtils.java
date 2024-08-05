@@ -70,6 +70,8 @@ public class ItemPriceUtils {
         try {
             JsonObject jsonObject = getCachedJsonObject();
 
+            if (jsonObject == null) return Optional.empty();
+
             // Check if the JSON contains necessary structures
             if (!jsonObject.has("products")) {
 //                System.err.println("Invalid JSON format: Missing 'products' field.");
@@ -110,6 +112,8 @@ public class ItemPriceUtils {
     public static Optional<Float> getBazaarItemSellPrice(String internalName) {
         try {
             JsonObject jsonObject = getCachedJsonObject();
+
+            if (jsonObject == null) return Optional.empty();
 
             // Check if the JSON contains necessary structures
             if (!jsonObject.has("products")) {
@@ -152,6 +156,8 @@ public class ItemPriceUtils {
         try {
             JsonObject jsonObject = getCachedJsonObject();
 
+            if (jsonObject == null) return Optional.empty();
+
             // Check if the JSON contains necessary structures
             if (!jsonObject.has("products")) {
 //                System.err.println("Invalid JSON format: Missing 'products' field.");
@@ -189,6 +195,8 @@ public class ItemPriceUtils {
         try {
             JsonObject jsonObject = getCachedJsonObject();
 
+            if (jsonObject == null) return Optional.empty();
+            
             // Check if the JSON contains necessary structures
             if (!jsonObject.has("products")) {
 //                System.err.println("Invalid JSON format: Missing 'products' field.");
@@ -248,6 +256,7 @@ public class ItemPriceUtils {
             LOGGER.warn("Failed to parse JSON data from file: " + exception.getMessage());
         }
         if (jsonElement != null) {
+            if (!jsonElement.isJsonObject()) return null;
             return jsonElement.getAsJsonObject();
         }
         return null;

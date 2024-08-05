@@ -32,4 +32,19 @@ public class Config implements ConfigData {
     public boolean crowdHider = true;
 
 
+    @ConfigEntry.Category(value = "Slayers")
+    public boolean showSlayerInfo = true;
+    @ConfigEntry.Category(value = "Slayers")
+    public int slayerInfoVerticalOffset = 50;
+
+    @ConfigEntry.Category(value = "Other")
+    public double itemRenderXoffset = 0.0;
+    @ConfigEntry.Category(value = "Other")
+    public double itemRenderYoffset = 0.0;
+    @ConfigEntry.Category(value = "Other")
+    public double itemRenderZoffset = 0.0;
+    @ConfigEntry.Category(value = "Other")
+    public double itemRenderScale = 1;
+
+
 }
