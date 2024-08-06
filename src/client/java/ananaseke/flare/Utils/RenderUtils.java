@@ -24,17 +24,23 @@ public class RenderUtils {
 
     public static void drawEntityBox(WorldRenderContext context, Entity entity) {
         Box box = entity.getBoundingBox();
-        drawBox(context, entity, box);
+        MatrixStack matrixStack = new MatrixStack();
+
+        drawBox(context, matrixStack, box);
     }
 
-    public static void drawBox(WorldRenderContext context, Entity entity, Box box) {
-        MatrixStack matrixStack = new MatrixStack();
+    public static void drawBox(WorldRenderContext context, MatrixStack matrixStack, Box box) {
         matrixStack.translate(
-                -entity.getX() - context.camera().getPos().x + entity.getX(),
-                -entity.getY() - context.camera().getPos().y + entity.getY(),
-                -entity.getZ() - context.camera().getPos().z + entity.getZ()
+                -context.camera().getPos().x,
+                -context.camera().getPos().y,
+                -context.camera().getPos().z
         );
         WorldRenderer.drawBox(matrixStack, context.consumers().getBuffer(RenderLayer.LINES), box, 1, 0, 0, 1);
+        matrixStack.translate(
+                context.camera().getPos().x,
+                context.camera().getPos().y,
+                context.camera().getPos().z
+        );
     }
 
     public static void drawCenteredText(String text, int offsetY, DrawContext context) {
@@ -47,6 +53,10 @@ public class RenderUtils {
         int y = height / 2 - textRenderer.fontHeight / 2 + offsetY;
 
         context.drawText(textRenderer, text, x, y, Color.WHITE.getRGB(), true);
+    }
+
+    public static void drawLineCrosshairToBlock(BlockPos blockPos) {
+
     }
 
 }

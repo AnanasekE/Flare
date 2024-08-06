@@ -14,6 +14,7 @@
     "DoubleSliderCallbacksMixin",
     "EntityMixin",
     "HealthBarMixin",
+    "ItemMixin",
     "ItemRendererMixin",
     "LivingEntityRendererMixin",
     "NewHealthBarMixin",

@@ -1,6 +1,7 @@
 package ananaseke.flare.overlays;
 
 import ananaseke.flare.KeyBinds;
+import ananaseke.flare.callbacks.ItemUsedCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
@@ -13,6 +14,8 @@ public class ItemOverlays {
 
     public static TimedOverlay JungleAxeOverlay = new TimedOverlay();
     public static TimedOverlay AgaricusCapOverlay = new TimedOverlay();
+    public static TimedOverlay WandOfAtonement = new TimedOverlay();
+
     public static int screenHeight;
     public static int screenWidth;
 
@@ -32,8 +35,9 @@ public class ItemOverlays {
             }
         });
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (KeyBinds.devKeybind.wasPressed()) {
+        ItemUsedCallback.EVENT.register(stack -> {
+            if (stack.getName().getString().contains("Wand of Atonement")) {
+                WandOfAtonement.setMessage(Text.of(""), 7000);
             }
         });
 
@@ -43,6 +47,9 @@ public class ItemOverlays {
             }
             if (AgaricusCapOverlay.shouldRender()) {
                 renderTimedOverlay(drawContext, AgaricusCapOverlay);
+            }
+            if (WandOfAtonement.shouldRender()) {
+                renderTimedOverlay(drawContext, WandOfAtonement);
             }
         });
     }

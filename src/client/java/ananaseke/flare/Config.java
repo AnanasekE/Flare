@@ -30,6 +30,8 @@ public class Config implements ConfigData {
     public boolean abilityDamageHider = true;
     @ConfigEntry.Category(value = "Chat Hiders")
     public boolean crowdHider = true;
+    @ConfigEntry.Category(value = "Chat Hiders")
+    public boolean youArePlayingOnProfileHider = true;
 
 
     @ConfigEntry.Category(value = "Slayers")

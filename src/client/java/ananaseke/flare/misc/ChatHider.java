@@ -58,6 +58,11 @@ public class ChatHider {
                             messageStr.contains(" damage.")
             )) {
                 return false;
+            } else if (config.youArePlayingOnProfileHider && (
+                            messageStr.contains("You are playing on profile:") ||
+                            messageStr.contains("Profile ID: ")
+            )) {
+                return false;
             }
 
             return true;

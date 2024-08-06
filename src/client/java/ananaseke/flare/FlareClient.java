@@ -9,21 +9,27 @@ import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.misc.ChatHider;
 import ananaseke.flare.overlays.ItemOverlays;
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.MapRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +131,17 @@ public class FlareClient implements ClientModInitializer {
 
             Optional<LivingEntity> OpMiniboss = entities.stream().filter(livingEntity ->
                     livingEntity.getName().getString().contains("Revenant Champion") ||
-                            livingEntity.getName().getString().contains("Deformed Revenant")
+                            livingEntity.getName().getString().contains("Deformed Revenant") ||
+                            livingEntity.getName().getString().contains("Atoned Champion") ||
+                            livingEntity.getName().getString().contains("Atoned Revenant") ||
+                            livingEntity.getName().getString().contains("Sven Follower") ||
+                            livingEntity.getName().getString().contains("Sven Alpha") ||
+                            livingEntity.getName().getString().contains("Tarantula Vermin") ||
+                            livingEntity.getName().getString().contains("Mutant Tarantula") ||
+                            livingEntity.getName().getString().contains("Voidling Devotee") ||
+                            livingEntity.getName().getString().contains("Voidling Radical") ||
+                            livingEntity.getName().getString().contains("Voidcrazed Maniac")
+
             ).findFirst();
 
             String slayerName;
@@ -142,9 +158,26 @@ public class FlareClient implements ClientModInitializer {
         });
 
 
+        WorldRenderEvents.AFTER_ENTITIES.register((worldRenderContext) -> {
+            PlayerEntity player = client.player;
+            Box box = new Box(player.getPos().add(-10, -5, -10), player.getPos().add(10, 5, 10));
+            BlockPos beaconPos = null;
+            // find beacon block
+            assert client.world != null;
+            for (int x = (int) box.minX; x < box.maxX; x++) {
+                for (int y = (int) box.minY; y < box.maxY; y++) {
+                    for (int z = (int) box.minZ; z < box.maxZ; z++) {
+                        if (client.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.BEACON) continue;
+                        beaconPos = new BlockPos(x, y, z);
+                        break;
+                    }
+                }
+            }
+
+            if (beaconPos == null) return;
+            RenderUtils.drawBox(worldRenderContext, worldRenderContext.matrixStack(), new Box(beaconPos));
+        });
     }
-
-
 }
 
 
