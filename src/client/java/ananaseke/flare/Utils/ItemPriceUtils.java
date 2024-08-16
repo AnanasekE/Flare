@@ -17,7 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ItemPriceUtils {
-    private static final String BAZAAR_URL = "https://api.hypixel.net/v2/skyblock/bazaar?API-Key=" + APIUtils.API_KEY;
+    private static final String BAZAAR_URL = "https://api.hypixel.net/v2/skyblock/bazaar";
     private static final Identifier BAZAAR_FILE_IDENTIFIER = Identifier.of("flare", "bazaar-data.json");
     private static final File BAZAAR_DATA_FILE = new File(FabricLoader.getInstance().getConfigDir().toFile(), BAZAAR_FILE_IDENTIFIER.getPath());
     public static final Logger LOGGER = FlareClient.LOGGER;
