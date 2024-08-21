@@ -8,6 +8,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.component.*;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -58,11 +59,9 @@ public class Info {
                 assert client.world != null;
                 client.world.getEntitiesByClass(LivingEntity.class, boundingBox, entity -> true)
                         .forEach(entity -> {
-                            if (entity.getCustomName() != null) {
-                                LOGGER.info(entity.getCustomName().getString());
-                            } else {
-                                LOGGER.info(entity.getName().getString());
-                            }
+                            LOGGER.info(entity.getName().getString());
+                            LOGGER.info(String.valueOf(entity instanceof ArmorStandEntity));
+                            LOGGER.info(entity.getClass().getSimpleName());
                         });
             }
         });

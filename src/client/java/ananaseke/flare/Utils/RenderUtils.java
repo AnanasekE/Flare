@@ -1,5 +1,6 @@
 package ananaseke.flare.Utils;
 
+import ananaseke.flare.overlays.TimedOverlay;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -7,6 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,26 +23,36 @@ import java.awt.image.renderable.RenderContext;
 
 
 public class RenderUtils {
+    static TimedOverlay timedOverlay = new TimedOverlay();
 
-    public static void drawEntityBox(WorldRenderContext context, Entity entity) {
+    public static void drawEntityBox(WorldRenderContext context, Entity entity, Color color) {
         Box box = entity.getBoundingBox();
         MatrixStack matrixStack = new MatrixStack();
 
-        drawBox(context, matrixStack, box);
+        drawBox(context, matrixStack, box, color);
     }
 
-    public static void drawBox(WorldRenderContext context, MatrixStack matrixStack, Box box) {
+    public static void drawBox(WorldRenderContext context, MatrixStack matrixStack, Box box, Color color) {
         matrixStack.translate(
                 -context.camera().getPos().x,
                 -context.camera().getPos().y,
                 -context.camera().getPos().z
         );
-        WorldRenderer.drawBox(matrixStack, context.consumers().getBuffer(RenderLayer.LINES), box, 1, 0, 0, 1);
+        WorldRenderer.drawBox(matrixStack, context.consumers().getBuffer(RenderLayer.LINES), box,
+                (float) color.getRed() / 255,
+                (float) color.getGreen() / 255,
+                (float) color.getBlue() / 255,
+                (float) color.getAlpha() / 255
+        );
         matrixStack.translate(
                 context.camera().getPos().x,
                 context.camera().getPos().y,
                 context.camera().getPos().z
         );
+    }
+    public static void drawBox(WorldRenderContext context, Box box, Color color) {
+        MatrixStack matrixStack = new MatrixStack();
+        drawBox(context, matrixStack, box, color);
     }
 
     public static void drawCenteredText(String text, int offsetY, DrawContext context) {

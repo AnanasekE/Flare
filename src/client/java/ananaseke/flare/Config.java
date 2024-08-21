@@ -6,9 +6,14 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "flare")
 public class Config implements ConfigData {
-    public boolean shouldRenderDungeonMap = true;
-    public boolean dungeonHigherLowerSolver = true;
     public boolean fullbright = true;
+
+    @ConfigEntry.Category(value = "Dungeons")
+    public boolean highlightStarredMobs = true;
+    @ConfigEntry.Category(value = "Dungeons")
+    public boolean shouldRenderDungeonMap = true;
+    @ConfigEntry.Category(value = "Dungeons")
+    public boolean dungeonHigherLowerSolver = true;
 
     @ConfigEntry.Category(value = "Chat Hiders")
     public boolean bossMessageHider = true;

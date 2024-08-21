@@ -1,6 +1,8 @@
 package ananaseke.flare.dungeons.solvers;
 
 import ananaseke.flare.Config;
+import ananaseke.flare.FlareClient;
+import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.RenderUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -8,15 +10,17 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.mob.BlazeEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Blaze {
-    private static Optional<Boolean> lastIsLower = Optional.empty();
+//    private static Optional<Boolean> lastIsLower = Optional.empty();
     static MinecraftClient client = MinecraftClient.getInstance();
 
     public static void initialize() {
@@ -28,7 +32,7 @@ public class Blaze {
 //            HIGHER/LOWER SOLVER
             BlazeEntity lowestBlaze;
             BlazeEntity highestBlaze;
-            boolean isLower = true; // chest under y 75
+//            boolean isLower = true; // chest under y 75
             List<BlazeEntity> blazes = new ArrayList<>();
             client.world.getEntities().forEach(entity -> {
                 if (entity instanceof BlazeEntity) {
@@ -41,37 +45,23 @@ public class Blaze {
 
             // is in blaze
 
-            BlockPos playerPos = client.player.getBlockPos();
-            Box box = new Box(
-                    playerPos.getX() + 10,
-                    playerPos.getY() + 10,
-                    playerPos.getZ() + 10,
-                    playerPos.getX() - 10,
-                    playerPos.getY() - 10,
-                    playerPos.getZ() - 10
-            );
+//            BlockPos playerPos = client.player.getBlockPos();
+//            Box box = new Box(
+//                    playerPos.getX() + 10,
+//                    playerPos.getY() + 10,
+//                    playerPos.getZ() + 10,
+//                    playerPos.getX() - 10,
+//                    playerPos.getY() - 10,
+//                    playerPos.getZ() - 10
+//            );
 
 //          70, 119
-            Optional<BlockPos> chestLower = searchForChestAtY(box, 70);
-            Optional<BlockPos> chestHigher = searchForChestAtY(box, 69);
-
-            if (lastIsLower.isEmpty()) {
-                if (chestLower.isPresent()) {
-                    isLower = true;
-                    lastIsLower = Optional.of(true);
-                } else if (chestHigher.isPresent()) {
-                    isLower = false;
-                    lastIsLower = Optional.of(false);
-                }
-            } else {
-                isLower = lastIsLower.get();
-            }
-
-
+//            Optional<BlockPos> chestLower = searchForChestAtY(box, 70);
+//            Optional<BlockPos> chestHigher = searchForChestAtY(box, 69);
 
 
             // height is based on hp
-            if (blazes.size() > 0) {
+            if (blazes.size() > 1) {
                 lowestBlaze = blazes.get(0);
                 highestBlaze = blazes.get(0);
                 for (BlazeEntity blaze : blazes) {
@@ -82,34 +72,30 @@ public class Blaze {
                         highestBlaze = blaze;
                     }
                 }
-
-                if (isLower) {
-                    RenderUtils.drawEntityBox(worldRenderContext, lowestBlaze);
-                } else {
-                    RenderUtils.drawEntityBox(worldRenderContext, highestBlaze);
-                }
+                    RenderUtils.drawEntityBox(worldRenderContext, lowestBlaze, Color.GREEN);
+                    RenderUtils.drawEntityBox(worldRenderContext, highestBlaze, Color.RED);
             }
 
         });
 
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (message.getString().contains("entered The Catacombs,")) {
-                lastIsLower = Optional.empty(); // reset
-            }
-        });
+//        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+//            if (message.getString().contains("entered The Catacombs,")) {
+//                lastIsLower = Optional.empty(); // reset
+//            }
+//        });
 
     }
 
 
-    private static Optional<BlockPos> searchForChestAtY(Box box, int y) {
-        for (int x = (int) box.minX; x < box.maxX; x++) {
-            for (int z = (int) box.minZ; z < box.maxZ; z++) {
-                BlockPos searchPos = new BlockPos(x, y, z);
-                if (client.world.getBlockEntity(searchPos) instanceof ChestBlockEntity) {
-                    return Optional.of(searchPos);
-                }
-            }
-        }
-        return Optional.empty();
-    }
+//    private static Optional<BlockPos> searchForChestAtY(Box box, int y) {
+//        for (int x = (int) box.minX; x < box.maxX; x++) {
+//            for (int z = (int) box.minZ; z < box.maxZ; z++) {
+//                BlockPos searchPos = new BlockPos(x, y, z);
+//                if (client.world.getBlockEntity(searchPos) instanceof ChestBlockEntity) {
+//                    return Optional.of(searchPos);
+//                }
+//            }
+//        }
+//        return Optional.empty();
+//    }
 }

@@ -25,6 +25,11 @@ public class ChatHider {
                             messageStr.contains("[BOSS] Scarf: ") ||
                             messageStr.contains("[BOSS] Bonzo: ") ||
                             messageStr.contains("[BOSS] Thorn: ") ||
+                            messageStr.contains("[BOSS] Livid: ") ||
+                            messageStr.contains("[BOSS] Sadan: ") ||
+                            messageStr.contains("[BOSS] Storm: ") ||
+                            messageStr.contains("[BOSS] Goldor: ") ||
+                            messageStr.contains("[BOSS] Maxor: ") ||
                             messageStr.contains("[BOSS] Necron: ")
             )) {
                 return false;

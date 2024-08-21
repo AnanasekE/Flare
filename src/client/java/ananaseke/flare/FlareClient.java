@@ -3,6 +3,7 @@ package ananaseke.flare;
 import ananaseke.flare.Plaques.Plaques;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.dungeons.DungeonMapRenderer;
+import ananaseke.flare.dungeons.HighlightStarredMobs;
 import ananaseke.flare.dungeons.Solvers;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
@@ -33,6 +34,7 @@ import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,13 +64,14 @@ public class FlareClient implements ClientModInitializer {
         VisitorTracker.initialize();
         DungeonMapRenderer.initialize();
         Solvers.initialize();
+        HighlightStarredMobs.initialize();
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (KeyBinds.highlightEntitiesBoxToggle) {
                 client.world.getEntities().forEach(entity -> {
 //                    LOGGER.info(entity.getName().getString());
                     if (entity instanceof ClientPlayerEntity) return;
-                    RenderUtils.drawEntityBox(context, entity);
+                    RenderUtils.drawEntityBox(context, entity, Color.RED);
                 });
             }
         });
@@ -175,8 +178,12 @@ public class FlareClient implements ClientModInitializer {
             }
 
             if (beaconPos == null) return;
-            RenderUtils.drawBox(worldRenderContext, worldRenderContext.matrixStack(), new Box(beaconPos));
+            RenderUtils.drawBox(worldRenderContext, worldRenderContext.matrixStack(), new Box(beaconPos), Color.RED);
         });
+    }
+
+    public Box findNextDoor() {
+        return null;
     }
 }
 

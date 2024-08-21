@@ -1,9 +1,15 @@
 package ananaseke.flare.dungeons.solvers;
 
+import ananaseke.flare.FlareClient;
+import ananaseke.flare.misc.AnnouncementManager;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Box;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.HashMap;
@@ -12,16 +18,29 @@ import java.util.Map;
 public class Riddles {
     private static MinecraftClient client = MinecraftClient.getInstance();
     private static Map<String, String> npcStatements = new HashMap<>();
+    private static Optional<String> messageOp = Optional.empty();
+    static boolean isRoomOpen = false;
 
     public static void initialize() {
-//        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-//            String messStr = message.getString();
-//            String response = solveRiddle(messStr);
-//            if (response != null) {
-//                client.player.sendMessage(Text.of(response));
-//            }
-//        });
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+//            FlareClient.LOGGER.info(message.getString().replaceAll("(§[0-9a-fklmnor])", ""));
+            String messStr = message.getString().replaceAll("(§[0-9a-fklmnor])", "");
+            String response = solveRiddle(messStr);
+//            FlareClient.LOGGER.info(response);
+            if (response != null) {
+                assert client.player != null;
+                client.player.sendMessage(Text.of(response));
+                messageOp = Optional.of(response);
+            }
+        });
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+            if (messageOp.isPresent()) {
+                AnnouncementManager.announceToPlayer(messageOp.get(), 5000);
+                messageOp = Optional.empty();
+            }
+        });
     }
+
 
     public static String solveRiddle(String message) {
         // Regular expression to extract the NPC name and the statement
@@ -32,6 +51,12 @@ public class Riddles {
             String npcName = matcher.group(1);
             String statement = matcher.group(2);
 
+            if (client.player == null) return null;
+            client.player.networkHandler.getListedPlayerListEntries().stream().limit(80L).toList().forEach(entry -> {
+                if (entry.getDisplayName() == null) return;
+                if (entry.getDisplayName().getString().contains("Three Weirdos")) isRoomOpen = true;
+            });
+            if (!isRoomOpen) return null;
             // Store the NPC name and their statement
             npcStatements.put(npcName, statement);
 
@@ -53,6 +78,8 @@ public class Riddles {
         String alphaStatement = npcStatements.get(alpha);
         String betaStatement = npcStatements.get(beta);
         String gammaStatement = npcStatements.get(gamma);
+
+        FlareClient.LOGGER.info(alphaStatement + ", " + betaStatement + " / " + gammaStatement);
 
         // Logic for Riddle 1
         if (alphaStatement.contains("One of us is telling the truth!") &&
@@ -103,9 +130,5 @@ public class Riddles {
         }
 
         return null;
-    }
-
-    public static void main(String[] args) {
-        initialize();
     }
 }
