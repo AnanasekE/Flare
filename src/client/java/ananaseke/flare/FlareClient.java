@@ -2,6 +2,7 @@ package ananaseke.flare;
 
 import ananaseke.flare.Plaques.Plaques;
 import ananaseke.flare.Utils.RenderUtils;
+import ananaseke.flare.dungeons.Dungeon;
 import ananaseke.flare.dungeons.DungeonMapRenderer;
 import ananaseke.flare.dungeons.HighlightStarredMobs;
 import ananaseke.flare.dungeons.Solvers;
@@ -14,9 +15,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.TranslucentBlock;
+import net.minecraft.block.TransparentBlock;
+import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
@@ -26,9 +32,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
@@ -37,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class FlareClient implements ClientModInitializer {
@@ -65,6 +76,7 @@ public class FlareClient implements ClientModInitializer {
         DungeonMapRenderer.initialize();
         Solvers.initialize();
         HighlightStarredMobs.initialize();
+        Dungeon.initialize();
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (KeyBinds.highlightEntitiesBoxToggle) {
@@ -180,10 +192,32 @@ public class FlareClient implements ClientModInitializer {
             if (beaconPos == null) return;
             RenderUtils.drawBox(worldRenderContext, worldRenderContext.matrixStack(), new Box(beaconPos), Color.RED);
         });
-    }
 
-    public Box findNextDoor() {
-        return null;
+        ClientTickEvents.START_CLIENT_TICK.register(client1 -> {
+            if (KeyBinds.devKeybind.wasPressed()) {
+                client.player.sendMessage(Text.of("/warp dhub"), false);
+            }
+        });
+
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+            if (client.player == null) return;
+            if (client.world == null) return;
+            if (client.cameraEntity == null) return;
+            double maxReach = 61;
+            if (client.player.getMainHandStack().getName().getString().contains("Aspect of the Void") && client.player.isSneaking()) {
+                HitResult hit = client.cameraEntity.raycast(maxReach, 1.0F, true);
+                if (hit == null) return;
+                if (hit.getType() == HitResult.Type.BLOCK) {
+                    BlockHitResult blockHitResult = (BlockHitResult) hit;
+                    BlockPos blockPos = blockHitResult.getBlockPos();
+                    Block block = client.world.getBlockState(blockPos).getBlock();
+                    if (block instanceof TranslucentBlock) return;
+                    if (client.world.getBlockState(blockPos.add(new Vec3i(0, 1, 0))).getBlock() == Blocks.AIR &&
+                            client.world.getBlockState(blockPos.add(new Vec3i(0, 2, 0))).getBlock() == Blocks.AIR)
+                        RenderUtils.drawBox(context, new Box(blockPos), Color.RED);
+                }
+            }
+        });
     }
 }
 

@@ -1,6 +1,7 @@
 package ananaseke.flare.dungeons.solvers;
 
 import ananaseke.flare.FlareClient;
+import ananaseke.flare.callbacks.DungeonEnterCallback;
 import ananaseke.flare.misc.AnnouncementManager;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -8,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Box;
+import net.minecraft.world.WorldEvents;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -39,6 +41,9 @@ public class Riddles {
                 messageOp = Optional.empty();
             }
         });
+        DungeonEnterCallback.EVENT.register(() -> {
+            npcStatements.clear();
+        });
     }
 
 
@@ -62,22 +67,45 @@ public class Riddles {
 
             // Check if we have all the necessary statements (assuming 3 NPCs per riddle)
             if (npcStatements.size() >= 3) {
-                return solve();
+                return solve(npcStatements);
             }
         }
 
         return null;
     }
 
-    private static String solve() {
-        String[] npcs = npcStatements.keySet().toArray(new String[0]);
-        String alpha = npcs[0];
-        String beta = npcs[1];
-        String gamma = npcs[2];
+    private static String solve(Map<String, String> npcStatements) {
+        // This maps the NPC names to their statements
+        Map<String, String> statementsMap = new HashMap<>(npcStatements);
 
-        String alphaStatement = npcStatements.get(alpha);
-        String betaStatement = npcStatements.get(beta);
-        String gammaStatement = npcStatements.get(gamma);
+        String alpha = null, beta = null, gamma = null;
+        String alphaStatement = null, betaStatement = null, gammaStatement = null;
+
+        for (Map.Entry<String, String> entry : statementsMap.entrySet()) {
+            String npc = entry.getKey();
+            String statement = entry.getValue();
+
+            if (statement.contains("One of us is telling the truth!") ||
+                    statement.contains("The reward is not in my chest. They are both lying.") ||
+                    statement.contains("My chest doesn't have the reward. At least one of the others is telling the truth!") ||
+                    statement.contains("They are both lying, the reward is in my chest!") ||
+                    statement.contains("We are all telling the truth!") ||
+                    statement.contains("Both of them are telling the truth. Also, ")) {
+                alpha = npc;
+                alphaStatement = statement;
+            } else if (statement.contains("They are both telling the truth. The reward isn't in") ||
+                    statement.contains("The reward is in my chest!") ||
+                    statement.contains("My chest doesn't have the reward. We are all telling the truth.") ||
+                    statement.contains("They are both telling the truth, the reward is in") ||
+                    statement.contains("At least one of them is lying, and the reward is not in") ||
+                    statement.contains(" is telling the truth.")) {
+                beta = npc;
+                betaStatement = statement;
+            } else {
+                gamma = npc;
+                gammaStatement = statement;
+            }
+        }
 
         FlareClient.LOGGER.info(alphaStatement + ", " + betaStatement + " / " + gammaStatement);
 
@@ -131,4 +159,5 @@ public class Riddles {
 
         return null;
     }
+
 }

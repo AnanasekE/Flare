@@ -4,6 +4,7 @@ import ananaseke.flare.Config;
 import ananaseke.flare.FlareClient;
 import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.RenderUtils;
+import ananaseke.flare.callbacks.DungeonEnterCallback;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class Blaze {
 //    private static Optional<Boolean> lastIsLower = Optional.empty();
     static MinecraftClient client = MinecraftClient.getInstance();
+    private static boolean isRoomOpen;
 
     public static void initialize() {
         Config config = AutoConfig.getConfigHolder(Config.class).getConfig();
@@ -29,6 +31,11 @@ public class Blaze {
 
         WorldRenderEvents.AFTER_ENTITIES.register(worldRenderContext -> {
             if (!config.dungeonHigherLowerSolver) return;
+            client.player.networkHandler.getListedPlayerListEntries().stream().limit(80L).toList().forEach(entry -> {
+                if (entry.getDisplayName() == null) return;
+                if (entry.getDisplayName().getString().contains("Three Weirdos")) isRoomOpen = true;
+            });
+            if (!isRoomOpen) return;
 //            HIGHER/LOWER SOLVER
             BlazeEntity lowestBlaze;
             BlazeEntity highestBlaze;
@@ -76,6 +83,10 @@ public class Blaze {
                     RenderUtils.drawEntityBox(worldRenderContext, highestBlaze, Color.RED);
             }
 
+        });
+
+        DungeonEnterCallback.EVENT.register(() -> {
+            isRoomOpen = false;
         });
 
 //        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
