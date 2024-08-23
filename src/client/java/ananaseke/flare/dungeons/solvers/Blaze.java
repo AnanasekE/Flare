@@ -85,7 +85,7 @@ public class Blaze {
 
         });
 
-        DungeonEnterCallback.EVENT.register(() -> {
+        DungeonEnterCallback.EVENT.register((floor) -> {
             isRoomOpen = false;
         });
 

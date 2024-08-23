@@ -41,7 +41,7 @@ public class Riddles {
                 messageOp = Optional.empty();
             }
         });
-        DungeonEnterCallback.EVENT.register(() -> {
+        DungeonEnterCallback.EVENT.register((floor) -> {
             npcStatements.clear();
         });
     }

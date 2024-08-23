@@ -22,6 +22,7 @@ public class KeyBinds {
     public static boolean highlightEntitiesBoxToggle;
     public static KeyBinding highlightEntitiesColor;
     public static boolean highlightEntitiesColorToggle;
+    public static KeyBinding fragRunModeKeybind;
 
     public static KeyBinding openConfigScreen;
 
@@ -80,6 +81,13 @@ public class KeyBinds {
                 "key.flare.open_config_menu",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
+                "category.flare.main"
+        ));
+
+        fragRunModeKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare.fragRunMode",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_END,
                 "category.flare.main"
         ));
 

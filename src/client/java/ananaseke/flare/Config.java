@@ -14,6 +14,8 @@ public class Config implements ConfigData {
     public boolean shouldRenderDungeonMap = true;
     @ConfigEntry.Category(value = "Dungeons")
     public boolean dungeonHigherLowerSolver = true;
+    @ConfigEntry.Category(value = "Dungeons")
+    public boolean fragRunMode = false;
 
     @ConfigEntry.Category(value = "Chat Hiders")
     public boolean bossMessageHider = true;

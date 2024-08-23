@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 public interface DungeonEnterCallback {
     Event<DungeonEnterCallback> EVENT = EventFactory.createArrayBacked(DungeonEnterCallback.class,
-            (listeners) -> () -> {
+            (listeners) -> (floor) -> {
                 for (DungeonEnterCallback listener : listeners) {
-                    listener.onDungeonEntered();
+                    listener.onDungeonEntered(floor);
                 }
             });
-    void onDungeonEntered();
+    void onDungeonEntered(int floor);
 }

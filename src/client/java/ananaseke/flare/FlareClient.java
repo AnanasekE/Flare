@@ -194,9 +194,9 @@ public class FlareClient implements ClientModInitializer {
         });
 
         ClientTickEvents.START_CLIENT_TICK.register(client1 -> {
-            if (KeyBinds.devKeybind.wasPressed()) {
-                client.player.sendMessage(Text.of("/warp dhub"), false);
-            }
+//            if (KeyBinds.devKeybind.wasPressed()) {
+//                client.player.sendMessage(Text.of("/warp dhub"), false);
+//            }
         });
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
