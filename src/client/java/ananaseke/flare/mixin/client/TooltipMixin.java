@@ -42,14 +42,22 @@ public class TooltipMixin {
         }
 
         ItemPriceUtils.getBazaarItemBuyPrice(internalName).ifPresent(price -> {
-            String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-            Text completed = Text.of("§6Buy Price: " + formattedPrice);
+            float newPrice = price;
+            if (price >= 100) {
+                newPrice = ((float) price.intValue());
+            }
+            String formattedPrice = NumberFormat.getNumberInstance(Locale.ENGLISH).format(newPrice);
+            Text completed = Text.of("§5Buy Price: §6" + formattedPrice + " coins");
             outList.add(completed);
         });
 
         ItemPriceUtils.getBazaarItemSellPrice(internalName).ifPresent(price -> {
-            String formattedPrice = NumberFormat.getNumberInstance(Locale.GERMAN).format(price);
-            Text completed = Text.of("§6Sell Price: " + formattedPrice);
+            float newPrice = price;
+            if (price >= 100) {
+                newPrice = ((float) price.intValue());
+            }
+            String formattedPrice = NumberFormat.getNumberInstance(Locale.ENGLISH).format(newPrice);
+            Text completed = Text.of("§5Buy Price: §6" + formattedPrice + " coins");
             outList.add(completed);
         });
 
