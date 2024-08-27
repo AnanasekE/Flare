@@ -57,7 +57,7 @@ public class TooltipMixin {
                 newPrice = ((float) price.intValue());
             }
             String formattedPrice = NumberFormat.getNumberInstance(Locale.ENGLISH).format(newPrice);
-            Text completed = Text.of("§5Buy Price: §6" + formattedPrice + " coins");
+            Text completed = Text.of("§5Sell Price: §6" + formattedPrice + " coins");
             outList.add(completed);
         });
 
