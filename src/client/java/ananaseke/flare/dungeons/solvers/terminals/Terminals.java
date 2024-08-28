@@ -4,6 +4,7 @@ import ananaseke.flare.Flare;
 import ananaseke.flare.FlareClient;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.callbacks.DrawBackgroundScreenCallback;
+import ananaseke.flare.callbacks.DrawSlotCallback;
 import ananaseke.flare.callbacks.OnSlotStackPickup;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -58,24 +59,33 @@ public class Terminals {
 //            }
 //        });
 
-        DrawBackgroundScreenCallback.EVENT.register(drawContext -> {
+//        DrawBackgroundScreenCallback.EVENT.register(drawContext -> {
+//            if (slotsToHighlight.isEmpty()) return;
+//            MinecraftClient client = MinecraftClient.getInstance();
+//            if (!(client.currentScreen instanceof GenericContainerScreen)) return;
+//            GenericContainerScreen screen = (GenericContainerScreen) client.currentScreen;
+//            GenericContainerScreenHandler handler = screen.getScreenHandler();
+//
+//            for (Integer id : slotsToHighlight) {
+//                for (Slot slot : handler.slots) {
+//                    if (slot.id != id) continue;
+//                    int x = slot.x;
+//                    int y = slot.y;
+//                    int offset = client.getWindow().getScaledWidth() / 2;
+//                    int yOffset = client.getWindow().getScaledHeight() / 2;
+//                    drawContext.fill(RenderLayer.getGui(), x - 8 + offset, y - 8 + yOffset, x + 8 + offset, y + 8 + yOffset, 10000, 0x8000FF00); // 0x8000FF00
+//
+//                }
+//            }
+//        });
+
+        DrawSlotCallback.EVENT.register((drawContext, slot) -> {
             if (slotsToHighlight.isEmpty()) return;
             MinecraftClient client = MinecraftClient.getInstance();
             if (!(client.currentScreen instanceof GenericContainerScreen)) return;
-            GenericContainerScreen screen = (GenericContainerScreen) client.currentScreen;
-            GenericContainerScreenHandler handler = screen.getScreenHandler();
 
-            for (Integer id : slotsToHighlight) {
-                for (Slot slot : handler.slots) {
-                    if (slot.id != id) continue;
-                    int x = slot.x;
-                    int y = slot.y;
-                    int offset = client.getWindow().getScaledWidth() / 2;
-                    int yOffset = client.getWindow().getScaledHeight() / 2;
-                    drawContext.fill(RenderLayer.getGui(), x - 8 + offset, y - 8 + yOffset, x + 8 + offset, y + 8 + yOffset, 10000, 0x8000FF00); // 0x8000FF00
-
-                }
-            }
+            if (slotsToHighlight.stream().noneMatch(integer -> slot.id == integer)) return;
+            drawContext.fill(RenderLayer.getGui(), slot.x, slot.y, slot.x + 16, slot.y + 16, 0, 0x8000FF00); // 0x8000FF00
         });
 
 
