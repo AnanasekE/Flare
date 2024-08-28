@@ -1,25 +1,16 @@
 package ananaseke.flare.dungeons.solvers.terminals;
 
-import ananaseke.flare.Flare;
 import ananaseke.flare.FlareClient;
-import ananaseke.flare.Utils.RenderUtils;
-import ananaseke.flare.callbacks.DrawBackgroundScreenCallback;
 import ananaseke.flare.callbacks.DrawSlotCallback;
 import ananaseke.flare.callbacks.OnSlotStackPickup;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.impl.client.rendering.v0.RenderingCallbackInvoker;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.GlyphRenderer;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.*;
 import net.minecraft.item.AirBlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,32 +36,24 @@ public class Terminals {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.getServer() == null) return;
-            client.getServer().getBossBarManager().getAll().forEach(commandBossBar -> {
-                if (commandBossBar.getName().getString().contains("Goldor")) {
-                    isInGoldor = true;
-                } else {
-                    isInGoldor = false;
-                }
-            });
+            client.getServer().getBossBarManager().getAll().forEach(commandBossBar -> isInGoldor = commandBossBar.getName().getString().contains("Goldor"));
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!preChestChecks(client, "Select all the")) return;
-            if (client.currentScreen instanceof GenericContainerScreen screen) {
-                GenericContainerScreenHandler handler = screen.getScreenHandler();
+            if (!(client.currentScreen instanceof GenericContainerScreen screen)) return;
+            GenericContainerScreenHandler handler = screen.getScreenHandler();
 
-                Pattern pattern = Pattern.compile("Select all the ([A-Za-z_]+) items!");
-                Matcher matcher = pattern.matcher(screen.getTitle().getString());
+            Pattern pattern = Pattern.compile("Select all the ([A-Za-z_]+) items!");
+            Matcher matcher = pattern.matcher(screen.getTitle().getString());
 
-                String color = null;
-                if (matcher.find()) {
-                    color = matcher.group(1);
-                }
+            if (matcher.find()) {
+                String color = matcher.group(1);
+
                 for (Slot slot : handler.slots) {
                     ItemStack stack = slot.getStack();
                     if (stack.getItem() instanceof AirBlockItem) continue;
                     String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
-                    if (color == null) continue;
                     if (modifiedName.contains(color)) {
                         slotsToHighlight.add(slot.getIndex());
                     }
@@ -82,6 +65,7 @@ public class Terminals {
             if (!preChestChecks(client, "What starts with:")) return;
 
             GenericContainerScreen screen = (GenericContainerScreen) client.currentScreen;
+            if (screen == null) return;
             GenericContainerScreenHandler handler = screen.getScreenHandler();
 
             Pattern pattern = Pattern.compile("What starts with: '([A-Z])'\\?");
@@ -89,9 +73,10 @@ public class Terminals {
 
             if (matcher.find()) {
                 String letter = matcher.group(1);
+                FlareClient.LOGGER.info(letter);
                 for (Slot slot : handler.slots) {
                     ItemStack stack = slot.getStack();
-                    if (stack.getName().getString().startsWith(letter)) {
+                    if (stack.getName().getString().startsWith(letter)) { // FIXME add a replacing for color tags
                         slotsToHighlight.add(slot.id);
                     }
                 }
