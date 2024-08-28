@@ -67,8 +67,4 @@ public class RenderUtils {
         context.drawText(textRenderer, text, x, y, Color.WHITE.getRGB(), true);
     }
 
-    public static void drawLineCrosshairToBlock(BlockPos blockPos) {
-
-    }
-
 }

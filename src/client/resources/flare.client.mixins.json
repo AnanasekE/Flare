@@ -3,7 +3,8 @@
   "package": "ananaseke.flare.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "ExampleClientMixin"
+    "ExampleClientMixin",
+    "GenericContainerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -18,6 +19,7 @@
     "ItemRendererMixin",
     "LivingEntityRendererMixin",
     "NewHealthBarMixin",
+    "SlotMixin",
     "SoundSystemMixin",
     "TooltipMixin",
     "VisitorTooltipMixin"
