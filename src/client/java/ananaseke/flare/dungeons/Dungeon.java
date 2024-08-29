@@ -17,6 +17,7 @@ public class Dungeon {
         ScoreCalculator.initialize();
         Terminals.initialize();
         FragRunMode.initialize();
+//        Croesus.initialize();
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
             int floor = 0;

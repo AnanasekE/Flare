@@ -151,6 +151,7 @@ public class FlareClient implements ClientModInitializer {
                             livingEntity.getName().getString().contains("Atoned Revenant") ||
                             livingEntity.getName().getString().contains("Sven Follower") ||
                             livingEntity.getName().getString().contains("Sven Alpha") ||
+                            livingEntity.getName().getString().contains("Tarantula Beast") ||
                             livingEntity.getName().getString().contains("Tarantula Vermin") ||
                             livingEntity.getName().getString().contains("Mutant Tarantula") ||
                             livingEntity.getName().getString().contains("Voidling Devotee") ||

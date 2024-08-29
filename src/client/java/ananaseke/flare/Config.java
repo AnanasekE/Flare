@@ -54,6 +54,7 @@ public class Config implements ConfigData {
     public double itemRenderZoffset = 0.0;
     @ConfigEntry.Category(value = "Other")
     public double itemRenderScale = 1;
-
+    @ConfigEntry.Category(value = "Other")
+    public boolean disableBlockBreakParticles = false;
 
 }

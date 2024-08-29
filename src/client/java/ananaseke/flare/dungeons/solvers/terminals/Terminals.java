@@ -1,6 +1,9 @@
 package ananaseke.flare.dungeons.solvers.terminals;
 
 import ananaseke.flare.FlareClient;
+import ananaseke.flare.KeyBinds;
+import ananaseke.flare.Utils.RenderUtils;
+import ananaseke.flare.Utils.Utils;
 import ananaseke.flare.callbacks.DrawSlotCallback;
 import ananaseke.flare.callbacks.OnSlotStackPickup;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -30,7 +33,8 @@ public class Terminals {
             if (!(client.currentScreen instanceof GenericContainerScreen)) return;
 
             if (slotsToHighlight.stream().noneMatch(integer -> slot.id == integer)) return;
-            drawContext.fill(RenderLayer.getGui(), slot.x, slot.y, slot.x + 16, slot.y + 16, 0, 0x8000FF00); // 0x8000FF00
+//            drawContext.fill(RenderLayer.getGui(), slot.x, slot.y, slot.x + 16, slot.y + 16, 0, 0x8000FF00); // 0x8000FF00
+            RenderUtils.highlightSlot(drawContext, slot);
         });
 
 
@@ -49,11 +53,15 @@ public class Terminals {
 
             if (matcher.find()) {
                 String color = matcher.group(1);
+                FlareClient.LOGGER.info("Color: " + color);
 
                 for (Slot slot : handler.slots) {
                     ItemStack stack = slot.getStack();
                     if (stack.getItem() instanceof AirBlockItem) continue;
-                    String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
+//                    String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
+                    String modifiedName = stack.getName().getString().toUpperCase();
+                    FlareClient.LOGGER.info("Item name: " + modifiedName);
+                    modifiedName = Utils.removeColorTags(modifiedName);
                     if (modifiedName.contains(color)) {
                         slotsToHighlight.add(slot.getIndex());
                     }
@@ -76,7 +84,8 @@ public class Terminals {
                 FlareClient.LOGGER.info(letter);
                 for (Slot slot : handler.slots) {
                     ItemStack stack = slot.getStack();
-                    if (stack.getName().getString().startsWith(letter)) { // FIXME add a replacing for color tags
+                    String modifiedName = Utils.removeColorTags(stack.getName().getString());
+                    if (modifiedName.startsWith(letter)) {
                         slotsToHighlight.add(slot.id);
                     }
                 }

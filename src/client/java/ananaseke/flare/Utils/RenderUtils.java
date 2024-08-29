@@ -8,6 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -50,6 +51,7 @@ public class RenderUtils {
                 context.camera().getPos().z
         );
     }
+
     public static void drawBox(WorldRenderContext context, Box box, Color color) {
         MatrixStack matrixStack = new MatrixStack();
         drawBox(context, matrixStack, box, color);
@@ -65,6 +67,16 @@ public class RenderUtils {
         int y = height / 2 - textRenderer.fontHeight / 2 + offsetY;
 
         context.drawText(textRenderer, text, x, y, Color.WHITE.getRGB(), true);
+    }
+
+    public static void highlightSlot(DrawContext drawContext, Slot slot, int z, int color) {
+        drawContext.fill(RenderLayer.getGui(), slot.x, slot.y, slot.x + 16, slot.y + 16, z, color); // 0x8000FF00
+    }
+
+    public static void highlightSlot(DrawContext drawContext, Slot slot) {
+        highlightSlot(drawContext, slot, 0, 0x8000FF00);
+
+
     }
 
 }
