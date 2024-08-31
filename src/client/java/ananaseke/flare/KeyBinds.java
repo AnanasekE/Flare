@@ -28,6 +28,48 @@ public class KeyBinds {
 
 
     public static void initialize() {
+        registerBinds();
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (devKeybind.wasPressed()) {
+                devKeybindToggle = !devKeybindToggle;
+                client.player.sendMessage(Text.of("Changed devKeybindToggle to " + devKeybindToggle), false);
+            }
+
+            if (highlightEntitiesBox.wasPressed()) {
+                highlightEntitiesBoxToggle = !highlightEntitiesBoxToggle;
+                client.player.sendMessage(Text.of("Changed highlightEntitiesBoxToggle to " + highlightEntitiesBoxToggle), false);
+            }
+
+            if (highlightEntitesGlow.wasPressed()) {
+                highlightEntitesGlowToggle = !highlightEntitesGlowToggle;
+                client.player.sendMessage(Text.of("Changed highlightEntitesGlowToggle to " + highlightEntitesGlowToggle), false);
+            }
+
+            if (highlightEntitiesColor.wasPressed()) {
+                highlightEntitiesColorToggle = !highlightEntitiesColorToggle;
+                client.player.sendMessage(Text.of("Changed highlightEntitesColorToggle to " + highlightEntitiesColorToggle), false);
+            }
+
+
+            while (openConfigScreen.wasPressed()) {
+                Screen configScreen = AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get();
+                MinecraftClient.getInstance().setScreen(configScreen);
+            }
+
+            if (openEChestKeybind.wasPressed()) {
+                if (MinecraftClient.getInstance().player == null) return;
+                MinecraftClient.getInstance().player.networkHandler.sendCommand("ec");
+            }
+            if (openPetMenu.wasPressed()) {
+                if (MinecraftClient.getInstance().player == null) return;
+                MinecraftClient.getInstance().player.networkHandler.sendCommand("pets");
+            }
+        });
+
+    }
+
+    private static void registerBinds() {
         showMoreItemInfoKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.flare.show_more_item_info",
                 InputUtil.Type.KEYSYM,
@@ -90,36 +132,5 @@ public class KeyBinds {
                 GLFW.GLFW_KEY_END,
                 "category.flare.main"
         ));
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (devKeybind.wasPressed()) {
-                devKeybindToggle = !devKeybindToggle;
-                client.player.sendMessage(Text.of("Changed devKeybindToggle to " + devKeybindToggle), false);
-            }
-
-            if (highlightEntitiesBox.wasPressed()) {
-                highlightEntitiesBoxToggle = !highlightEntitiesBoxToggle;
-                client.player.sendMessage(Text.of("Changed highlightEntitiesBoxToggle to " + highlightEntitiesBoxToggle), false);
-            }
-
-            if (highlightEntitesGlow.wasPressed()) {
-                highlightEntitesGlowToggle = !highlightEntitesGlowToggle;
-                client.player.sendMessage(Text.of("Changed highlightEntitesGlowToggle to " + highlightEntitesGlowToggle), false);
-            }
-
-            if (highlightEntitiesColor.wasPressed()) {
-                highlightEntitiesColorToggle = !highlightEntitiesColorToggle;
-                client.player.sendMessage(Text.of("Changed highlightEntitesColorToggle to " + highlightEntitiesColorToggle), false);
-            }
-
-
-            while (openConfigScreen.wasPressed()) {
-                Screen configScreen = AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get();
-                MinecraftClient.getInstance().setScreen(configScreen);
-            }
-
-            // TODO run apropriate command on button click, /pets, /echest
-        });
-
     }
 }
