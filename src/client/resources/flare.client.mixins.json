@@ -17,6 +17,7 @@
     "ChatHudMixin",
     "DoubleSliderCallbacksMixin",
     "EntityMixin",
+    "GenericContainerScreenHandlerMixin",
     "HealthBarMixin",
     "ItemMixin",
     "ItemRendererMixin",

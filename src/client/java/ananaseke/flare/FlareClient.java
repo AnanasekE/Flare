@@ -77,6 +77,7 @@ public class FlareClient implements ClientModInitializer {
         Solvers.initialize();
         HighlightStarredMobs.initialize();
         Dungeon.initialize();
+        Commands.initialize();
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (KeyBinds.highlightEntitiesBoxToggle) {

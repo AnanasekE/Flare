@@ -10,13 +10,17 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.*;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.item.AirBlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.DyeColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +30,7 @@ public class Terminals {
 
     public static void initialize() {
         StartsWithSequenceSolver.initialize();
+        ColorTerm.initialize();
 
         DrawSlotCallback.EVENT.register((drawContext, slot) -> {
             if (slotsToHighlight.isEmpty()) return;
@@ -43,32 +48,32 @@ public class Terminals {
             client.getServer().getBossBarManager().getAll().forEach(commandBossBar -> isInGoldor = commandBossBar.getName().getString().contains("Goldor"));
         });
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!preChestChecks(client, "Select all the")) return;
-            if (!(client.currentScreen instanceof GenericContainerScreen screen)) return;
-            GenericContainerScreenHandler handler = screen.getScreenHandler();
-
-            Pattern pattern = Pattern.compile("Select all the ([A-Za-z_]+) items!");
-            Matcher matcher = pattern.matcher(screen.getTitle().getString());
-
-            if (matcher.find()) { // FIXME matcher broken with hypixel terminals, title might contain other characters
-                String color = matcher.group(1);
-                FlareClient.LOGGER.info("Color: " + color);
-
-                for (Slot slot : handler.slots) {
-                    ItemStack stack = slot.getStack();
-                    if (stack.getItem() instanceof AirBlockItem) continue;
-                    FlareClient.LOGGER.info("Raw item name: " + stack.getName().getString());
-//                    String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
-                    String modifiedName = stack.getName().getString().toUpperCase();
-                    FlareClient.LOGGER.info("Modified item name: " + modifiedName);
-                    modifiedName = Utils.removeColorTags(modifiedName);
-                    if (modifiedName.contains(color)) {
-                        slotsToHighlight.add(slot.getIndex());
-                    }
-                }
-            }
-        });
+//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+//            if (!preChestChecks(client, "Select all the")) return;
+//            if (!(client.currentScreen instanceof GenericContainerScreen screen)) return;
+//            GenericContainerScreenHandler handler = screen.getScreenHandler();
+//
+//            Pattern pattern = Pattern.compile("Select all the ([A-Z ]+) items!");
+//            Matcher matcher = pattern.matcher(screen.getTitle().getString());
+//
+//            if (matcher.find()) {
+//                String color = matcher.group(1);
+//                FlareClient.LOGGER.info("Color: " + color);
+//
+//                for (Slot slot : handler.slots) {
+//                    ItemStack stack = slot.getStack();
+//                    if (stack.getItem() instanceof AirBlockItem) continue;
+//                    FlareClient.LOGGER.info("Raw item name: " + stack.getName().getString());
+////                    String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
+//                    String modifiedName = stack.getName().getString().toUpperCase();
+//                    FlareClient.LOGGER.info("Modified item name: " + modifiedName);
+//                    modifiedName = Utils.removeColorTags(modifiedName);
+//                    if (modifiedName.contains(color)) {
+//                        slotsToHighlight.add(slot.getIndex());
+//                    }
+//                }
+//            }
+//        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!preChestChecks(client, "What starts with:")) return;
@@ -86,7 +91,7 @@ public class Terminals {
                 for (Slot slot : handler.slots) {
                     ItemStack stack = slot.getStack();
                     String modifiedName = Utils.removeColorTags(stack.getName().getString());
-                    if (modifiedName.startsWith(letter)) {
+                    if (modifiedName.startsWith(letter) && !slot.getStack().hasGlint()) {
                         slotsToHighlight.add(slot.id);
                     }
                 }
