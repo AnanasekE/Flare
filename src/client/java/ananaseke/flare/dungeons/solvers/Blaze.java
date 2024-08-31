@@ -33,7 +33,7 @@ public class Blaze {
             if (!config.dungeonHigherLowerSolver) return;
             client.player.networkHandler.getListedPlayerListEntries().stream().limit(80L).toList().forEach(entry -> {
                 if (entry.getDisplayName() == null) return;
-                if (entry.getDisplayName().getString().contains("Three Weirdos")) isRoomOpen = true;
+                if (entry.getDisplayName().getString().contains("Higher or Lower")) isRoomOpen = true;
             });
             if (!isRoomOpen) return;
 //            HIGHER/LOWER SOLVER

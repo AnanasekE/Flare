@@ -26,7 +26,7 @@ public class Croesus {
             RenderUtils.highlightSlot(drawContext, slot);
         });
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> { // FIXME broken screen or something on hypixel
             if (client.currentScreen == null) return;
             if (!client.currentScreen.getTitle().getString().contains("Croesus")) return;
             GenericContainerScreen screen = (GenericContainerScreen) client.currentScreen;
@@ -39,13 +39,13 @@ public class Croesus {
 
             for (Slot slot : screenHandler.slots) {
                 if (slotsToHighlight.stream().anyMatch(slot1 -> slot1.id == slot.id)) continue;
+
                 LoreComponent loreComponent = slot.getStack().getItem().getComponents().get(DataComponentTypes.LORE);
                 if (loreComponent == null) continue;
-                if (loreComponent.lines().stream().noneMatch(text -> text.getString().contains("No Chests Opened!"))) {
-                    continue;
-                }
 
-                slotsToHighlight.add(slot);
+                if (loreComponent.lines().stream().anyMatch(text -> text.getString().contains("No Chests Opened!"))) {
+                    slotsToHighlight.add(slot);
+                }
             }
         });
 

@@ -21,30 +21,17 @@ public class Dungeon {
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
             int floor = 0;
-            if (message.contains(Text.of(" entered The Catacombs, "))) {
-                switch (Arrays.stream(message.getString().replaceAll("-", "").split(",")).toList().getLast().trim().replaceAll("!", "")) {
-                    case "Floor I":
-                        floor = 1;
-                        break;
-                    case "Floor II":
-                        floor = 2;
-                        break;
-                    case "Floor III":
-                        floor = 3;
-                        break;
-                    case "Floor IV":
-                        floor = 4;
-                        break;
-                    case "Floor V":
-                        floor = 5;
-                        break;
-                    case "Floor VI":
-                        floor = 6;
-                        break;
-                    case "Floor VII":
-                        floor = 7;
-                        break;
-                }
+            if (message.contains(Text.of(" entered The Catacombs, "))) { // TODO fix to work with master mode
+                floor = switch (Arrays.stream(message.getString().replaceAll("-", "").split(",")).toList().getLast().trim().replaceAll("!", "")) {
+                    case "Floor I" -> 1;
+                    case "Floor II" -> 2;
+                    case "Floor III" -> 3;
+                    case "Floor IV" -> 4;
+                    case "Floor V" -> 5;
+                    case "Floor VI" -> 6;
+                    case "Floor VII" -> 7;
+                    default -> floor;
+                };
                 FlareClient.LOGGER.info(String.valueOf(floor));
                 if (floor == 0) return;
                 DungeonEnterCallback.EVENT.invoker().onDungeonEntered(7);

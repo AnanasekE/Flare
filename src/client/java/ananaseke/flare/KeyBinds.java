@@ -117,6 +117,8 @@ public class KeyBinds {
                 Screen configScreen = AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get();
                 MinecraftClient.getInstance().setScreen(configScreen);
             }
+
+            // TODO run apropriate command on button click, /pets, /echest
         });
 
     }

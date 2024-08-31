@@ -51,16 +51,17 @@ public class Terminals {
             Pattern pattern = Pattern.compile("Select all the ([A-Za-z_]+) items!");
             Matcher matcher = pattern.matcher(screen.getTitle().getString());
 
-            if (matcher.find()) {
+            if (matcher.find()) { // FIXME matcher broken with hypixel terminals, title might contain other characters
                 String color = matcher.group(1);
                 FlareClient.LOGGER.info("Color: " + color);
 
                 for (Slot slot : handler.slots) {
                     ItemStack stack = slot.getStack();
                     if (stack.getItem() instanceof AirBlockItem) continue;
+                    FlareClient.LOGGER.info("Raw item name: " + stack.getName().getString());
 //                    String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
                     String modifiedName = stack.getName().getString().toUpperCase();
-                    FlareClient.LOGGER.info("Item name: " + modifiedName);
+                    FlareClient.LOGGER.info("Modified item name: " + modifiedName);
                     modifiedName = Utils.removeColorTags(modifiedName);
                     if (modifiedName.contains(color)) {
                         slotsToHighlight.add(slot.getIndex());
@@ -79,7 +80,7 @@ public class Terminals {
             Pattern pattern = Pattern.compile("What starts with: '([A-Z])'\\?");
             Matcher matcher = pattern.matcher(client.currentScreen.getTitle().getString());
 
-            if (matcher.find()) {
+            if (matcher.find()) { // FIXME matcher broken with hypixel terminals, possible different quotes or backticks
                 String letter = matcher.group(1);
                 FlareClient.LOGGER.info(letter);
                 for (Slot slot : handler.slots) {

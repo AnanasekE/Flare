@@ -92,7 +92,7 @@ public class FlareClient implements ClientModInitializer {
             if (!config.shouldRenderDungeonMap) return;
             try {
                 MapRenderer mapRenderer = client.gameRenderer.getMapRenderer();
-                assert client.player != null;
+                if (client.player == null) return;
                 ItemStack stack = client.player.getInventory().getStack(8);
                 if (stack.getItem() instanceof FilledMapItem) {
                     MatrixStack matrixStack = new MatrixStack();

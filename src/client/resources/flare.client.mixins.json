@@ -3,6 +3,7 @@
   "package": "ananaseke.flare.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ClientPlayNetworkHandlerMixin",
     "ExampleClientMixin",
     "GenericContainerScreenMixin",
     "HandledScreenMixin"
