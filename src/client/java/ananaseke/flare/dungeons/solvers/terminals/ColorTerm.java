@@ -39,7 +39,7 @@ public class ColorTerm {
 
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
             if (client.currentScreen == null) {
-                if (slotsToHighlight.isEmpty()) {
+                if (!slotsToHighlight.isEmpty()) {
                     slotsToHighlight.clear();
                 }
                 return;

@@ -82,7 +82,7 @@ public class Terminals {
             if (screen == null) return;
             GenericContainerScreenHandler handler = screen.getScreenHandler();
 
-            Pattern pattern = Pattern.compile("What starts with: '([A-Z])'\\?");
+            Pattern pattern = Pattern.compile("^What starts with: '([A-Z])'\\?$");
             Matcher matcher = pattern.matcher(client.currentScreen.getTitle().getString());
 
             if (matcher.find()) { // FIXME matcher broken with hypixel terminals, possible different quotes or backticks
