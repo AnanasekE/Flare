@@ -76,16 +76,20 @@ public class Terminals {
 //        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!preChestChecks(client, "What starts with:")) return;
+            if (client.currentScreen == null) {
+                if (!slotsToHighlight.isEmpty()) {
+                    slotsToHighlight.clear();
+                }
+                return;
+            }
+            if (!(client.currentScreen instanceof GenericContainerScreen screen)) return;
 
-            GenericContainerScreen screen = (GenericContainerScreen) client.currentScreen;
-            if (screen == null) return;
             GenericContainerScreenHandler handler = screen.getScreenHandler();
 
             Pattern pattern = Pattern.compile("^What starts with: '([A-Z])'\\?$");
             Matcher matcher = pattern.matcher(client.currentScreen.getTitle().getString());
 
-            if (matcher.find()) { // FIXME matcher broken with hypixel terminals, possible different quotes or backticks
+            if (matcher.matches()) {
                 String letter = matcher.group(1);
                 FlareClient.LOGGER.info(letter);
                 for (Slot slot : handler.slots) {
@@ -110,14 +114,5 @@ public class Terminals {
 
         });
 
-    }
-
-    private static boolean preChestChecks(MinecraftClient client, String startsWith) {
-        if (!isInGoldor) return false;
-        if (client.player == null) return false;
-        if (client.currentScreen == null) return false;
-        if (!client.currentScreen.getTitle().getString().startsWith(startsWith)) return false;
-        if (!(client.currentScreen instanceof GenericContainerScreen)) return false;
-        return true;
     }
 }

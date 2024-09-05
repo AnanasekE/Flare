@@ -10,7 +10,6 @@ import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.misc.ChatHider;
-import ananaseke.flare.misc.ChocolateFactory;
 import ananaseke.flare.overlays.ItemOverlays;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -79,7 +78,7 @@ public class FlareClient implements ClientModInitializer {
         HighlightStarredMobs.initialize();
         Dungeon.initialize();
         Commands.initialize();
-        ChocolateFactory.initialize();
+//        ChocolateFactory.initialize();
 
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
