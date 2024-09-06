@@ -2,10 +2,7 @@ package ananaseke.flare;
 
 import ananaseke.flare.Plaques.Plaques;
 import ananaseke.flare.Utils.RenderUtils;
-import ananaseke.flare.dungeons.Dungeon;
-import ananaseke.flare.dungeons.DungeonMapRenderer;
-import ananaseke.flare.dungeons.HighlightStarredMobs;
-import ananaseke.flare.dungeons.Solvers;
+import ananaseke.flare.dungeons.*;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.AntiSpam;
@@ -71,8 +68,9 @@ public class FlareClient implements ClientModInitializer {
         HighlightStarredMobs.initialize();
         Dungeon.initialize();
         Commands.initialize();
-        ChocolateFactory chocolateFactory = new ChocolateFactory();
-        chocolateFactory.onInitializeClient();
+        new ChocolateFactory();
+        new Croesus();
+        new PartyFinder();
 
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {

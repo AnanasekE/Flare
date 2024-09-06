@@ -39,6 +39,10 @@ public abstract class SimpleColorSolver {
             if (client1.currentScreen != null) {
                 if (test(client1.currentScreen)) {
                     highlightSlots = getHighlights(((GenericContainerScreen) (client1.currentScreen)).getScreenHandler().slots);
+                } else {
+                    if (!highlightSlots.isEmpty()) {
+                        highlightSlots.clear();
+                    }
                 }
             } else if (!highlightSlots.isEmpty()) {
                 highlightSlots.clear();

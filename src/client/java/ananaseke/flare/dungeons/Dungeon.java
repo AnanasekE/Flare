@@ -6,8 +6,6 @@ import ananaseke.flare.callbacks.DungeonStartCallback;
 import ananaseke.flare.dungeons.solvers.terminals.Terminals;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -17,7 +15,6 @@ public class Dungeon {
 //        ScoreCalculator.initialize();
         Terminals.initialize();
         FragRunMode.initialize();
-//        Croesus.initialize();
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
             int floor = 0;

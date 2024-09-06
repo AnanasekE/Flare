@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChocolateFactory extends SimpleColorSolver implements ClientModInitializer {
+public class ChocolateFactory extends SimpleColorSolver {
     Map<String, Integer> rabbitMultipliers = new HashMap<>();
 
     public ChocolateFactory() {
@@ -33,13 +33,7 @@ public class ChocolateFactory extends SimpleColorSolver implements ClientModInit
     }
 
     @Override
-    public void onInitializeClient() {
-
-    }
-
-    @Override
     protected List<Slot> getHighlights(DefaultedList<Slot> slots) {
-//        FlareClient.LOGGER.info("CF works");
         Pattern coinsPattern = Pattern.compile("([0-9,]+) Chocolate");
         Pattern namePattern = Pattern.compile("Rabbit (Bro|Cousin|Sis|Daddy|Granny|Uncle|Dog).*");
         int bestValue = Integer.MAX_VALUE;
