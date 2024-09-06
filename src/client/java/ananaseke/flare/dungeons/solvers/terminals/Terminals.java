@@ -1,7 +1,6 @@
 package ananaseke.flare.dungeons.solvers.terminals;
 
 import ananaseke.flare.FlareClient;
-import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.Utils.Utils;
 import ananaseke.flare.callbacks.DrawSlotCallback;
@@ -9,18 +8,12 @@ import ananaseke.flare.callbacks.OnSlotStackPickup;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.render.*;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.item.AirBlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.DyeColor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,33 +40,6 @@ public class Terminals {
             if (client.getServer() == null) return;
             client.getServer().getBossBarManager().getAll().forEach(commandBossBar -> isInGoldor = commandBossBar.getName().getString().contains("Goldor"));
         });
-
-//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-//            if (!preChestChecks(client, "Select all the")) return;
-//            if (!(client.currentScreen instanceof GenericContainerScreen screen)) return;
-//            GenericContainerScreenHandler handler = screen.getScreenHandler();
-//
-//            Pattern pattern = Pattern.compile("Select all the ([A-Z ]+) items!");
-//            Matcher matcher = pattern.matcher(screen.getTitle().getString());
-//
-//            if (matcher.find()) {
-//                String color = matcher.group(1);
-//                FlareClient.LOGGER.info("Color: " + color);
-//
-//                for (Slot slot : handler.slots) {
-//                    ItemStack stack = slot.getStack();
-//                    if (stack.getItem() instanceof AirBlockItem) continue;
-//                    FlareClient.LOGGER.info("Raw item name: " + stack.getName().getString());
-////                    String modifiedName = stack.getName().getString().toUpperCase().replaceAll(" ", "_");
-//                    String modifiedName = stack.getName().getString().toUpperCase();
-//                    FlareClient.LOGGER.info("Modified item name: " + modifiedName);
-//                    modifiedName = Utils.removeColorTags(modifiedName);
-//                    if (modifiedName.contains(color)) {
-//                        slotsToHighlight.add(slot.getIndex());
-//                    }
-//                }
-//            }
-//        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.currentScreen == null) {

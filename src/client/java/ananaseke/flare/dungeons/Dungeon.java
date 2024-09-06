@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class Dungeon {
 
     public static void initialize() {
-        ScoreCalculator.initialize();
+//        ScoreCalculator.initialize();
         Terminals.initialize();
         FragRunMode.initialize();
 //        Croesus.initialize();

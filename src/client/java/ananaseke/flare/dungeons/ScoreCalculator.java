@@ -1,38 +1,56 @@
 package ananaseke.flare.dungeons;
 
 import ananaseke.flare.callbacks.DungeonEnterCallback;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.text.Text;
 
-import java.sql.Time;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScoreCalculator {
-    private static MinecraftClient client = MinecraftClient.getInstance();
+public class ScoreCalculator implements ClientModInitializer {
+    private final MinecraftClient mc = MinecraftClient.getInstance();
 
-    private static int totalScore = 0;
-    private static int skillScore = 20;
-    private static int explorationScore = 0;
-    private static int timeScore = 0;
-    private static int bonusScore = 0;
-    private static int floor;
+    private int totalScore = 0;
+    private int skillScore = 20;
+    private int explorationScore = 0;
+    private int timeScore = 0;
+    private int bonusScore = 0;
+    private int floor;
 
-    private static Map<Integer, Float> secretPercentageNeeded = new HashMap<>();
-    private static Map<Integer, Integer> timeLimit = new HashMap<>();
-    private static long timeElapsed = 0;
+    private final Map<Integer, Float> secretPercentageNeeded = new HashMap<>();
+    private final Map<Integer, Integer> timeLimit = new HashMap<>();
+    private long timeElapsed = 0;
 
-    private static int completedRooms;
-    private static int totalRooms;
-    private static float secretPercentFound;
-    private static float secretPercentNeeded;
-    private static int failedPuzzles;
-    private static int deathPenalty;
+    private int completedRooms;
+    private int totalRooms;
+    private float secretPercentFound;
+    private float secretPercentNeeded;
+    private int failedPuzzles;
+    private int deathPenalty;
 
-    public static void initialize() {
+    private void updateScore() {
+        secretPercentageNeeded.clear();
+        secretPercentFound = 0;
+        secretPercentNeeded = secretPercentageNeeded.getOrDefault(floor, 7F);
+
+
+        failedPuzzles = 0;
+        deathPenalty = 0;
+
+        skillScore = 20 + (80 * (completedRooms / totalRooms)) - (10 * failedPuzzles) - deathPenalty;
+        explorationScore = (60 * (completedRooms / totalRooms)) + (int) (40 * (secretPercentFound / secretPercentNeeded));
+    }
+
+    private List<PlayerListEntry> getTablist() {
+        if (mc.player == null) return null;
+        return mc.player.networkHandler.getListedPlayerListEntries().stream().limit(80L).toList();
+    }
+
+    @Override
+    public void onInitializeClient() {
         DungeonEnterCallback.EVENT.register(floor1 -> floor = floor1);
         secretPercentageNeeded.put(1, 0.3F);
         secretPercentageNeeded.put(2, 0.4F);
@@ -57,24 +75,9 @@ public class ScoreCalculator {
         timeLimit.put(13, 600);
         timeLimit.put(14, 840);
 
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            updateScore();
+        });
+
     }
-
-    private static void updateScore() {
-        secretPercentageNeeded.clear();
-        secretPercentFound = 0;
-        secretPercentNeeded = secretPercentageNeeded.getOrDefault(floor, 7F);
-
-
-        failedPuzzles = 0;
-        deathPenalty = 0;
-
-//        skillScore = 20 + (80 * (completedRooms / totalRooms)) - (10 * failedPuzzles) - deathPenalty;
-//        explorationScore = (60 * (completedRooms / totalRooms)) + (40 * (secretPercentFound / secretPercentNeeded));
-    }
-
-    private static List<PlayerListEntry> getTablist() {
-        if (client.player == null) return null;
-        return client.player.networkHandler.getListedPlayerListEntries().stream().limit(80L).toList();
-    }
-
 }

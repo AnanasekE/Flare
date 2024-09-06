@@ -10,8 +10,8 @@ import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.misc.ChatHider;
+import ananaseke.flare.misc.ChocolateFactory;
 import ananaseke.flare.overlays.ItemOverlays;
-import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -21,8 +21,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TranslucentBlock;
-import net.minecraft.block.TransparentBlock;
-import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
@@ -32,22 +30,17 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class FlareClient implements ClientModInitializer {
@@ -78,7 +71,8 @@ public class FlareClient implements ClientModInitializer {
         HighlightStarredMobs.initialize();
         Dungeon.initialize();
         Commands.initialize();
-//        ChocolateFactory.initialize();
+        ChocolateFactory chocolateFactory = new ChocolateFactory();
+        chocolateFactory.onInitializeClient();
 
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
