@@ -56,5 +56,6 @@ public class Config implements ConfigData {
     public double itemRenderScale = 1;
     @ConfigEntry.Category(value = "Other")
     public boolean disableBlockBreakParticles = false;
-
+    @ConfigEntry.Category(value = "Other")
+    public boolean disableFireOverlay = false;
 }

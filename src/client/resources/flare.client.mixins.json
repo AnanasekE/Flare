@@ -6,7 +6,8 @@
     "ClientPlayNetworkHandlerMixin",
     "ExampleClientMixin",
     "GenericContainerScreenMixin",
-    "HandledScreenMixin"
+    "HandledScreenMixin",
+    "InGameOverlayRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
