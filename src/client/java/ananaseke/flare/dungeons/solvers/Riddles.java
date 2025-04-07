@@ -49,7 +49,7 @@ public class Riddles {
 
     public static String solveRiddle(String message) {
         // Regular expression to extract the NPC name and the statement
-        Pattern pattern = Pattern.compile("\\[NPC\\] (\\w+): (.+)");
+        Pattern pattern = Pattern.compile("\\[NPC] (\\w+): (.+)");
         Matcher matcher = pattern.matcher(message);
 
         if (matcher.find()) {

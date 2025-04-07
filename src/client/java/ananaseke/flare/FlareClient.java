@@ -19,6 +19,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TranslucentBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,6 +40,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FlareClient implements ClientModInitializer {
 
@@ -57,8 +60,7 @@ public class FlareClient implements ClientModInitializer {
 
         Plaques.initialize();
         Fullbright.initialize();
-        ItemOverlays.initialize();
-        Info.initialize();
+        ItemOverlays.initialize();Info.initialize();
         AntiSpam.initialize();
         KeyBinds.initialize();
         ChatHider.initialize();
