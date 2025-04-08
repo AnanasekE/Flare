@@ -2,7 +2,6 @@ package ananaseke.flare.dungeons.solvers.terminals;
 
 import ananaseke.flare.KeyBinds;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
 public class StartsWithSequenceSolver {

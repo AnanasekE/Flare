@@ -1,10 +1,6 @@
 package ananaseke.flare.misc;
 
-import ananaseke.flare.Flare;
-import ananaseke.flare.FlareClient;
-import ananaseke.flare.Utils.ItemUtils;
 import ananaseke.flare.Utils.Utils;
-import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.screen.slot.Slot;

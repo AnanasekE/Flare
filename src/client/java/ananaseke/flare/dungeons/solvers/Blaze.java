@@ -1,27 +1,19 @@
 package ananaseke.flare.dungeons.solvers;
 
 import ananaseke.flare.Config;
-import ananaseke.flare.FlareClient;
-import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.callbacks.DungeonEnterCallback;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.mob.BlazeEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Blaze {
-//    private static Optional<Boolean> lastIsLower = Optional.empty();
+    //    private static Optional<Boolean> lastIsLower = Optional.empty();
     static MinecraftClient client = MinecraftClient.getInstance();
     private static boolean isRoomOpen;
 
@@ -31,16 +23,20 @@ public class Blaze {
 
         WorldRenderEvents.AFTER_ENTITIES.register(worldRenderContext -> {
             if (!config.dungeonHigherLowerSolver) return;
+            if (client.player == null) return;
+
             client.player.networkHandler.getListedPlayerListEntries().stream().limit(80L).toList().forEach(entry -> {
                 if (entry.getDisplayName() == null) return;
                 if (entry.getDisplayName().getString().contains("Higher Or Lower")) isRoomOpen = true;
             });
+
             if (!isRoomOpen) return;
 //            HIGHER/LOWER SOLVER
             BlazeEntity lowestBlaze;
             BlazeEntity highestBlaze;
 //            boolean isLower = true; // chest under y 75
             List<BlazeEntity> blazes = new ArrayList<>();
+            if (client.world == null) return;
             client.world.getEntities().forEach(entity -> {
                 if (entity instanceof BlazeEntity) {
                     if (entity.squaredDistanceTo(client.player) < 10000) {
@@ -69,8 +65,8 @@ public class Blaze {
 
             // height is based on hp
             if (blazes.size() > 1) {
-                lowestBlaze = blazes.get(0);
-                highestBlaze = blazes.get(0);
+                lowestBlaze = blazes.getFirst();
+                highestBlaze = blazes.getFirst();
                 for (BlazeEntity blaze : blazes) {
                     if (blaze.getHealth() < lowestBlaze.getHealth()) {
                         lowestBlaze = blaze;
@@ -79,8 +75,8 @@ public class Blaze {
                         highestBlaze = blaze;
                     }
                 }
-                    RenderUtils.drawEntityBox(worldRenderContext, lowestBlaze, Color.GREEN);
-                    RenderUtils.drawEntityBox(worldRenderContext, highestBlaze, Color.RED);
+                RenderUtils.drawEntityBox(worldRenderContext, lowestBlaze, Color.GREEN);
+                RenderUtils.drawEntityBox(worldRenderContext, highestBlaze, Color.RED);
             }
 
         });

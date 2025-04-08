@@ -4,82 +4,63 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Trivia {
     private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Map<String, String> questionsAndAnswers = new HashMap<>();
 
-    public static void initialize() {
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+    public Trivia() {
+        registerQuestions();
+
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> { // TODO: add check if in dungeons
             String messStr = message.getString();
             assert client.player != null;
-            if (messStr.contains("What is the status of The Watcher?")) {
-                client.player.sendMessage(Text.of("Stalker"));
-            } else if (messStr.contains("What is the status of Bonzo?")) {
-                client.player.sendMessage(Text.of("New Necromancer"));
-            } else if (messStr.contains("What is the status of Scarf?")) {
-                client.player.sendMessage(Text.of("Apprentice Necromancer"));
-            } else if (messStr.contains("What is the status of The Professor?")) {
-                client.player.sendMessage(Text.of("Professor"));
-            } else if (messStr.contains("What is the status of Thorn?")) {
-                client.player.sendMessage(Text.of("Shaman Necromancer"));
-            } else if (messStr.contains("What is the status of Livid?")) {
-                client.player.sendMessage(Text.of("Master Necromancer"));
-            } else if (messStr.contains("What is the status of Sadan?")) {
-                client.player.sendMessage(Text.of("Necromancer Lord"));
-            } else if (messStr.contains("What is the status of Maxor?")) {
-                client.player.sendMessage(Text.of("Young Wither"));
-            } else if (messStr.contains("What is the status of Goldor?")) {
-                client.player.sendMessage(Text.of("Wither Soldier"));
-            } else if (messStr.contains("What is the status of Storm?")) {
-                client.player.sendMessage(Text.of("Elementalist"));
-            } else if (messStr.contains("What is the status of Necron?")) {
-                client.player.sendMessage(Text.of("Wither Lord"));
-            } else if (messStr.contains("How many total Fairy Souls are there?")) {
-                client.player.sendMessage(Text.of("222 Fairy Souls"));
-            } else if (messStr.contains("How many Fairy Souls are there in Spider's Den?")) {
-                client.player.sendMessage(Text.of("19"));
-            } else if (messStr.contains("How many Fairy Souls are there in The End?")) {
-                client.player.sendMessage(Text.of("12"));
-            } else if (messStr.contains("How many Fairy Souls are there in The Barn?")) {
-                client.player.sendMessage(Text.of("7"));
-            } else if (messStr.contains("How many Fairy Souls are there in Mushroom Desert?")) {
-                client.player.sendMessage(Text.of("8"));
-            } else if (messStr.contains("How many Fairy Souls are there in Blazing Fortress?")) {
-                client.player.sendMessage(Text.of("19"));
-            } else if (messStr.contains("How many Fairy Souls are there in The Park?")) {
-                client.player.sendMessage(Text.of("11"));
-            } else if (messStr.contains("How many Fairy Souls are there in Jerry's Workshop?")) {
-                client.player.sendMessage(Text.of("5"));
-            } else if (messStr.contains("How many Fairy Souls are there in The Hub?")) {
-                client.player.sendMessage(Text.of("79"));
-            } else if (messStr.contains("How many Fairy Souls are there in Deep Caverns?")) {
-                client.player.sendMessage(Text.of("21"));
-            } else if (messStr.contains("How many Fairy Souls are there in Gold Mine?")) {
-                client.player.sendMessage(Text.of("12"));
-            } else if (messStr.contains("How many Fairy Souls are there in Dungeon Hub?")) {
-                client.player.sendMessage(Text.of("7"));
-            } else if (messStr.contains("How many Fairy Souls are there in Dwarven Mines?")) {
-                client.player.sendMessage(Text.of("11"));
-            } else if (messStr.contains("Which brother is on the Spider's Den?")) {
-                client.player.sendMessage(Text.of("Rick"));
-            } else if (messStr.contains("What is the name of Rick's brother?")) {
-                client.player.sendMessage(Text.of("Pat"));
-            } else if (messStr.contains("What is the name of the Painter in the Hub?")) {
-                client.player.sendMessage(Text.of("Marco"));
-            } else if (messStr.contains("What is the name of the person that upgrades pets?")) {
-                client.player.sendMessage(Text.of("Kat"));
-            } else if (messStr.contains("What is the name of the lady of the Nether?")) {
-                client.player.sendMessage(Text.of("Elle"));
-            } else if (messStr.contains("Which villager in the Village gives you a Rogue Sword?")) {
-                client.player.sendMessage(Text.of("Jamie"));
-            } else if (messStr.contains("How many unique minions are there?")) {
-                client.player.sendMessage(Text.of("55"));
-            } else if (messStr.contains("Which of these enemies does not spawn in the Spider's Den?")) {
-                client.player.sendMessage(Text.of("Zombie"));
-            } else if (messStr.contains("Which of these monsters only spawns at night?")) {
-                client.player.sendMessage(Text.of("Zombie Villager"));
-            } else if (messStr.contains("Which of these is not a dragon in The End?")) {
-                client.player.sendMessage(Text.of("Zoomer Dragon"));
+
+            for (Map.Entry<String, String> entry : questionsAndAnswers.entrySet()) {
+                if (messStr.contains(entry.getKey())) {
+                    client.player.sendMessage(Text.of(entry.getValue()));
+                    break;
+                }
             }
         });
+    }
+
+    private void registerQuestions() {
+        questionsAndAnswers.put("What is the status of The Watcher?", "Stalker");
+        questionsAndAnswers.put("What is the status of Bonzo?", "New Necromancer");
+        questionsAndAnswers.put("What is the status of Scarf?", "Apprentice Necromancer");
+        questionsAndAnswers.put("What is the status of The Professor?", "Professor");
+        questionsAndAnswers.put("What is the status of Thorn?", "Shaman Necromancer");
+        questionsAndAnswers.put("What is the status of Livid?", "Master Necromancer");
+        questionsAndAnswers.put("What is the status of Sadan?", "Necromancer Lord");
+        questionsAndAnswers.put("What is the status of Maxor?", "Young Wither");
+        questionsAndAnswers.put("What is the status of Goldor?", "Wither Soldier");
+        questionsAndAnswers.put("What is the status of Storm?", "Elementalist");
+        questionsAndAnswers.put("What is the status of Necron?", "Wither Lord");
+        questionsAndAnswers.put("How many total Fairy Souls are there?", "222 Fairy Souls");
+        questionsAndAnswers.put("How many Fairy Souls are there in Spider's Den?", "19");
+        questionsAndAnswers.put("How many Fairy Souls are there in The End?", "12");
+        questionsAndAnswers.put("How many Fairy Souls are there in The Barn?", "7");
+        questionsAndAnswers.put("How many Fairy Souls are there in Mushroom Desert?", "8");
+        questionsAndAnswers.put("How many Fairy Souls are there in Blazing Fortress?", "19");
+        questionsAndAnswers.put("How many Fairy Souls are there in The Park?", "11");
+        questionsAndAnswers.put("How many Fairy Souls are there in Jerry's Workshop?", "5");
+        questionsAndAnswers.put("How many Fairy Souls are there in The Hub?", "79");
+        questionsAndAnswers.put("How many Fairy Souls are there in Deep Caverns?", "21");
+        questionsAndAnswers.put("How many Fairy Souls are there in Gold Mine?", "12");
+        questionsAndAnswers.put("How many Fairy Souls are there in Dungeon Hub?", "7");
+        questionsAndAnswers.put("How many Fairy Souls are there in Dwarven Mines?", "11");
+        questionsAndAnswers.put("Which brother is on the Spider's Den?", "Rick");
+        questionsAndAnswers.put("What is the name of Rick's brother?", "Pat");
+        questionsAndAnswers.put("What is the name of the Painter in the Hub?", "Marco");
+        questionsAndAnswers.put("What is the name of the person that upgrades pets?", "Kat");
+        questionsAndAnswers.put("What is the name of the lady of the Nether?", "Elle");
+        questionsAndAnswers.put("Which villager in the Village gives you a Rogue Sword?", "Jamie");
+        questionsAndAnswers.put("How many unique minions are there?", "55");
+        questionsAndAnswers.put("Which of these enemies does not spawn in the Spider's Den?", "Zombie");
+        questionsAndAnswers.put("Which of these monsters only spawns at night?", "Zombie Villager");
+        questionsAndAnswers.put("Which of these is not a dragon in The End?", "Zoomer Dragon");
     }
 }

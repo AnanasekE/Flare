@@ -1,10 +1,7 @@
 package ananaseke.flare.mixin.client;
 
-import ananaseke.flare.FlareClient;
-import ananaseke.flare.KeyBinds;
 import ananaseke.flare.Utils.ItemPriceUtils;
 import ananaseke.flare.Utils.ItemUtils;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

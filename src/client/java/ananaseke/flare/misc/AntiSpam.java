@@ -1,18 +1,5 @@
 package ananaseke.flare.misc;
 
-import ananaseke.flare.Flare;
-import ananaseke.flare.FlareClient;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.network.message.MessageSignatureData;
-import net.minecraft.text.Text;
-import org.slf4j.Logger;
-
-import java.util.Objects;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 public class AntiSpam {
     //    private static int lastMessageCount = 1;
 //    private static final Logger LOGGER = FlareClient.LOGGER;

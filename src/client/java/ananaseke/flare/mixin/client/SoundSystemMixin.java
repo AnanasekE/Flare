@@ -1,6 +1,5 @@
 package ananaseke.flare.mixin.client;
 
-import ananaseke.flare.FlareClient;
 import ananaseke.flare.KeyBinds;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;

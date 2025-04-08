@@ -1,6 +1,5 @@
 package ananaseke.flare.dungeons.solvers.terminals;
 
-import ananaseke.flare.FlareClient;
 import ananaseke.flare.Utils.RenderUtils;
 import ananaseke.flare.callbacks.DrawSlotCallback;
 import ananaseke.flare.callbacks.OnSlotStackPickup;

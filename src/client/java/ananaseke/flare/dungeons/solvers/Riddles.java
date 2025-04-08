@@ -6,10 +6,7 @@ import ananaseke.flare.misc.AnnouncementManager;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.WorldEvents;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

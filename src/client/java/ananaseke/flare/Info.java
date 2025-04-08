@@ -15,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
-import javax.swing.*;
-
 
 public class Info {
 
@@ -47,6 +45,7 @@ public class Info {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
                 // Get player's current position as Vec3d
+                if (client.player == null) return;
                 Vec3d playerPos = client.player.getPos();
 
                 // Define bounding box around the player
@@ -68,9 +67,11 @@ public class Info {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding2.wasPressed()) {
+                if (client.player == null) return;
                 client.player.getMainHandStack().getComponents().forEach(component -> LOGGER.info(component.toString()));
                 if (client.player.getMainHandStack().getComponents().get(DataComponentTypes.CUSTOM_DATA) != null) {
                    @Nullable NbtComponent customData = client.player.getMainHandStack().getComponents().get(DataComponentTypes.CUSTOM_DATA);
+                    if (customData == null) return;
                     customData.apply((nbtComponent) -> {
                         LOGGER.info(nbtComponent.getString("id"));
                     });
