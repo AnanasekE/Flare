@@ -14,7 +14,7 @@ public class PartyFinder extends SimpleColorSolver {
     }
 
     @Override
-    protected List<Slot> getHighlights(DefaultedList<Slot> slots) {
+    protected List<Slot> getHighlightedSlots(DefaultedList<Slot> slots) {
         return new ArrayList<>(slots.stream().filter(slot -> {
             if (slot.getStack().getComponents().get(DataComponentTypes.LORE) == null) return false;
             return slot.getStack().getComponents().get(DataComponentTypes.LORE).lines().stream().anyMatch(text -> text.getString().matches("Click to join!"));

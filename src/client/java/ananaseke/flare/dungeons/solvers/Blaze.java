@@ -2,7 +2,7 @@ package ananaseke.flare.dungeons.solvers;
 
 import ananaseke.flare.Config;
 import ananaseke.flare.Utils.RenderUtils;
-import ananaseke.flare.callbacks.DungeonEnterCallback;
+import ananaseke.flare.callbacks.DungeonEvents;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
@@ -81,9 +81,7 @@ public class Blaze {
 
         });
 
-        DungeonEnterCallback.EVENT.register((floor) -> {
-            isRoomOpen = false;
-        });
+        DungeonEvents.ENTER.register(floor1 -> isRoomOpen = false);
 
 //        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
 //            if (message.getString().contains("entered The Catacombs,")) {

@@ -29,7 +29,7 @@ public class ChocolateFactory extends SimpleColorSolver {
     }
 
     @Override
-    protected List<Slot> getHighlights(DefaultedList<Slot> slots) {
+    protected List<Slot> getHighlightedSlots(DefaultedList<Slot> slots) {
         Pattern coinsPattern = Pattern.compile("([0-9,]+) Chocolate");
         Pattern namePattern = Pattern.compile("Rabbit (Bro|Cousin|Sis|Daddy|Granny|Uncle|Dog).*");
         int bestValue = Integer.MAX_VALUE;

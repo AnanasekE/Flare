@@ -1,7 +1,7 @@
 package ananaseke.flare.dungeons.solvers;
 
 import ananaseke.flare.FlareClient;
-import ananaseke.flare.callbacks.DungeonEnterCallback;
+import ananaseke.flare.callbacks.DungeonEvents;
 import ananaseke.flare.misc.AnnouncementManager;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -38,9 +38,7 @@ public class Riddles {
                 messageOp = Optional.empty();
             }
         });
-        DungeonEnterCallback.EVENT.register((floor) -> {
-            npcStatements.clear();
-        });
+        DungeonEvents.ENTER.register(floor1 -> npcStatements.clear());
     }
 
 
