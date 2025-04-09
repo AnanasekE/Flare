@@ -9,7 +9,7 @@ public class StartsWithSequenceSolver {
 
     public static void initialize() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> { // FIXME - the logic is already in Terminals
-            if (!KeyBinds.devKeybindToggle) return;
+            if (!KeyBinds.isToggleActive(KeyBinds.devKeybind)) return;
             if (client.player == null) return;
             if (client.currentScreen == null) return;
             client.player.sendMessage(client.currentScreen.getTitle());

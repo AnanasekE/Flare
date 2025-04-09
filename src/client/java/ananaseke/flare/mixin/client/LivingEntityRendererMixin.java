@@ -14,7 +14,7 @@ public class LivingEntityRendererMixin {
 
     @Inject(method = "getOverlay", at = @At("RETURN"), cancellable = true)
     private static void getOverlay(LivingEntity entity, float whiteOverlayProgress, CallbackInfoReturnable<Integer> cir) {
-        if (KeyBinds.highlightEntitiesColorToggle) {
+        if (KeyBinds.isToggleActive(KeyBinds.highlightEntitiesColor)) {
             cir.setReturnValue(OverlayTexture.packUv(OverlayTexture.getU(whiteOverlayProgress), OverlayTexture.getV(true)));
         }
 //        return OverlayTexture.packUv(OverlayTexture.getU(whiteOverlayProgress), OverlayTexture.getV(entity.hurtTime > 0 || entity.deathTime > 0));

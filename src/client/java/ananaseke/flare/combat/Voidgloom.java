@@ -18,10 +18,11 @@ public class Voidgloom {
         WorldRenderEvents.AFTER_ENTITIES.register((worldRenderContext) -> {
             PlayerEntity player = client.player;
             if (player == null) return;
+            if (client.world == null) return;
+
             Box box = new Box(player.getPos().add(-10, -5, -10), player.getPos().add(10, 5, 10));
             BlockPos beaconPos = null;
             // find beacon block
-            assert client.world != null;
             for (int x = (int) box.minX; x < box.maxX; x++) {
                 for (int y = (int) box.minY; y < box.maxY; y++) {
                     for (int z = (int) box.minZ; z < box.maxZ; z++) {

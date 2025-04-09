@@ -3,134 +3,102 @@ package ananaseke.flare;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KeyBinds {
+
+
+    // KeyBindings
     public static KeyBinding showMoreItemInfoKeybind;
     public static KeyBinding devKeybind;
-    public static boolean devKeybindToggle;
     public static KeyBinding openEChestKeybind;
     public static KeyBinding openPetMenu;
-    public static KeyBinding highlightEntitesGlow;
-    public static boolean highlightEntitesGlowToggle;
+    public static KeyBinding highlightEntitiesGlow;
     public static KeyBinding highlightEntitiesBox;
-    public static boolean highlightEntitiesBoxToggle;
     public static KeyBinding highlightEntitiesColor;
-    public static boolean highlightEntitiesColorToggle;
     public static KeyBinding fragRunModeKeybind;
-
     public static KeyBinding openConfigScreen;
 
 
-    public static void initialize() {
-        registerBinds();
+    private static final Map<KeyBinding, ToggleOption> toggles = new HashMap<>();
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (devKeybind.wasPressed()) {
-                devKeybindToggle = !devKeybindToggle;
-                client.player.sendMessage(Text.of("Changed devKeybindToggle to " + devKeybindToggle), false);
-            }
-
-            if (highlightEntitiesBox.wasPressed()) {
-                highlightEntitiesBoxToggle = !highlightEntitiesBoxToggle;
-                client.player.sendMessage(Text.of("Changed highlightEntitiesBoxToggle to " + highlightEntitiesBoxToggle), false);
-            }
-
-            if (highlightEntitesGlow.wasPressed()) {
-                highlightEntitesGlowToggle = !highlightEntitesGlowToggle;
-                client.player.sendMessage(Text.of("Changed highlightEntitesGlowToggle to " + highlightEntitesGlowToggle), false);
-            }
-
-            if (highlightEntitiesColor.wasPressed()) {
-                highlightEntitiesColorToggle = !highlightEntitiesColorToggle;
-                client.player.sendMessage(Text.of("Changed highlightEntitesColorToggle to " + highlightEntitiesColorToggle), false);
-            }
-
-
-            while (openConfigScreen.wasPressed()) {
-                Screen configScreen = AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get();
-                MinecraftClient.getInstance().setScreen(configScreen);
-            }
-
-            if (openEChestKeybind.wasPressed()) {
-                if (MinecraftClient.getInstance().player == null) return;
-                MinecraftClient.getInstance().player.networkHandler.sendCommand("ec");
-            }
-            if (openPetMenu.wasPressed()) {
-                if (MinecraftClient.getInstance().player == null) return;
-                MinecraftClient.getInstance().player.networkHandler.sendCommand("pets");
-            }
-        });
-
+    private record ToggleOption(String name, boolean state) {
+        ToggleOption toggle() {
+            return new ToggleOption(this.name, !this.state);
+        }
     }
 
-    private static void registerBinds() {
-        showMoreItemInfoKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.show_more_item_info",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_LEFT_SHIFT,
-                "category.flare.main"
-        ));
+    public static boolean isToggleActive(KeyBinding keyBinding) {
+        return toggles.getOrDefault(keyBinding, new ToggleOption(keyBinding.toString() + "Toggle", false)).state();
+    }
 
-        devKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.dev",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_GRAVE_ACCENT,
-                "category.flare.main"
-        ));
+    public static void initialize() {
+        registerKeyBindings();
+        registerToggles();
 
-        openEChestKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.open_ec",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_B,
-                "category.flare.main"
-        ));
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-        openPetMenu = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.open_pet_menu",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_N,
-                "category.flare.main"
-        ));
+            // Process toggle keys
+            toggles.keySet().forEach(keyBinding -> {
+                if (keyBinding.wasPressed()) {
+                    ToggleOption option = toggles.get(keyBinding).toggle();
+                    toggles.put(keyBinding, option);
+                    if (client.player == null) return;
+                    client.player.sendMessage(Text.of("Changed " + option.name + " to " + option.state()));
+                }
+            });
 
-        highlightEntitesGlow = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.highlight_entities_glow",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_HOME,
-                "category.flare.main"
-        ));
+            processKey(openConfigScreen, () -> {
+                Screen configScreen = AutoConfig.getConfigScreen(Config.class, client.currentScreen).get();
+                client.setScreen(configScreen);
+            });
 
-        highlightEntitiesBox = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.highlight_entities",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_HOME,
-                "category.flare.main"
-        ));
+            if (client.player == null) return;
+            processKey(openEChestKeybind, () -> client.player.networkHandler.sendCommand("ec"));
+            processKey(openPetMenu, () -> client.player.networkHandler.sendCommand("pets"));
 
-        highlightEntitiesColor = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.highlight_entities_color",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_MINUS,
-                "category.flare.main"
-        ));
+        });
+    }
 
-        openConfigScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.open_config_menu",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_H,
-                "category.flare.main"
-        ));
+    private static void registerKeyBindings() {
+        showMoreItemInfoKeybind = register("show_more_item_info", GLFW.GLFW_KEY_LEFT_SHIFT);
+        devKeybind = register("dev", GLFW.GLFW_KEY_GRAVE_ACCENT);
+        openEChestKeybind = register("open_ec", GLFW.GLFW_KEY_B);
+        openPetMenu = register("open_pet_menu", GLFW.GLFW_KEY_N);
+        highlightEntitiesGlow = register("highlight_entities_glow", GLFW.GLFW_KEY_HOME);
+        highlightEntitiesBox = register("highlight_entities", GLFW.GLFW_KEY_HOME);
+        highlightEntitiesColor = register("highlight_entities_color", GLFW.GLFW_KEY_MINUS);
+        openConfigScreen = register("open_config_menu", GLFW.GLFW_KEY_H);
+        fragRunModeKeybind = register("fragRunMode", GLFW.GLFW_KEY_END);
+    }
 
-        fragRunModeKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.flare.fragRunMode",
+    private static void registerToggles() {
+        toggles.put(devKeybind, new ToggleOption("devKeybindToggle", false));
+        toggles.put(highlightEntitiesBox, new ToggleOption("highlightEntitiesBoxToggle", false));
+        toggles.put(highlightEntitiesGlow, new ToggleOption("highlightEntitiesGlowToggle", false));
+        toggles.put(highlightEntitiesColor, new ToggleOption("highlightEntitiesColorToggle", false));
+    }
+
+    private static KeyBinding register(String name, int keyCode) {
+        return KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.flare." + name,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_END,
+                keyCode,
                 "category.flare.main"
         ));
+    }
+
+    public static void processKey(KeyBinding keyBinding, Runnable action) {
+        while (keyBinding.wasPressed()) {
+            FlareClient.LOGGER.info("Clicked: {}", keyBinding);
+            action.run();
+        }
     }
 }

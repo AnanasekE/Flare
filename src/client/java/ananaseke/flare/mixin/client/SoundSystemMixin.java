@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SoundSystemMixin {
     @Inject(method = "play", at = @At("HEAD"))
     public void play(SoundInstance sound, CallbackInfo ci) {
-        if (KeyBinds.devKeybindToggle) {
+        if (KeyBinds.isToggleActive(KeyBinds.devKeybind)) {
 //            FlareClient.LOGGER.info("Sound: " + sound.getId().toString() + " at " + sound.getX() + "," + sound.getY() + "," + sound.getZ());
         }
     }

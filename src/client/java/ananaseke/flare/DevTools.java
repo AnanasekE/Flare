@@ -10,7 +10,7 @@ import java.awt.*;
 public class DevTools {
     public DevTools() {
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-            if (KeyBinds.highlightEntitiesBoxToggle) {
+            if (KeyBinds.isToggleActive(KeyBinds.highlightEntitiesBox)) {
                 MinecraftClient client = MinecraftClient.getInstance();
                 if (client.world == null) return;
                 client.world.getEntities().forEach(entity -> {

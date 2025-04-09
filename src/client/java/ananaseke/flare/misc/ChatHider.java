@@ -2,6 +2,7 @@ package ananaseke.flare.misc;
 
 import ananaseke.flare.Config;
 import ananaseke.flare.FlareClient;
+import ananaseke.flare.KeyBinds;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import java.util.ArrayList;
@@ -60,12 +61,15 @@ public class ChatHider {
         )));
 
         filterList.add(new MessageFilter(c -> c.youArePlayingOnProfileHider, Set.of(
-                "§aYou are playing on profile: .+"
+                "§aYou are playing on profile: .+",
+                "Profile ID: .+"
         )));
+
+        // [STATUE] Oruo the Omniscient: Answer incorrectly, and your moment of ineptitude will live on for generations.
 
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             String messageStr = message.getString();
-            if (!(messageStr.contains("Defense") && messageStr.contains("Mana"))) {
+            if (!(messageStr.contains("Defense") && messageStr.contains("Mana")) || KeyBinds.devKeybind.wasPressed()) {
                 FlareClient.LOGGER.info("TEST: {}", messageStr); // FIXME
             }
 
