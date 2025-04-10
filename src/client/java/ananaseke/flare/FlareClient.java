@@ -5,7 +5,6 @@ import ananaseke.flare.combat.Slayers;
 import ananaseke.flare.dungeons.*;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
-import ananaseke.flare.misc.AntiSpam;
 import ananaseke.flare.misc.AspectOfTheVoid;
 import ananaseke.flare.misc.ChatHider;
 import ananaseke.flare.misc.ChocolateFactory;
@@ -32,7 +31,6 @@ public class FlareClient implements ClientModInitializer {
         Fullbright.initialize();
         ItemOverlays.initialize();
         Info.initialize();
-        AntiSpam.initialize();
         KeyBinds.initialize();
         new ChatHider();
         VisitorTracker.initialize();
