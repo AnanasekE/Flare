@@ -1,8 +1,6 @@
 package ananaseke.flare.overlays;
 
-import ananaseke.flare.KeyBinds;
 import ananaseke.flare.callbacks.ItemUsedCallback;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;

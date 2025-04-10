@@ -1,6 +1,6 @@
 package ananaseke.flare.dungeons;
 
-import ananaseke.flare.callbacks.DungeonEnterCallback;
+import ananaseke.flare.callbacks.DungeonEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -51,7 +51,7 @@ public class ScoreCalculator implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        DungeonEnterCallback.EVENT.register(floor1 -> floor = floor1);
+        DungeonEvents.ENTER.register(floor1 -> floor = floor1);
         secretPercentageNeeded.put(1, 0.3F);
         secretPercentageNeeded.put(2, 0.4F);
         secretPercentageNeeded.put(3, 0.5F);

@@ -38,7 +38,7 @@ public abstract class SimpleColorSolver {
         ClientTickEvents.END_CLIENT_TICK.register(client1 -> {
             if (client1.currentScreen != null) {
                 if (test(client1.currentScreen)) {
-                    highlightSlots = getHighlights(((GenericContainerScreen) (client1.currentScreen)).getScreenHandler().slots);
+                    highlightSlots = getHighlightedSlots(((GenericContainerScreen) (client1.currentScreen)).getScreenHandler().slots);
                 } else {
                     if (!highlightSlots.isEmpty()) {
                         highlightSlots.clear();
@@ -63,7 +63,7 @@ public abstract class SimpleColorSolver {
         return false;
     }
 
-    protected abstract List<Slot> getHighlights(DefaultedList<Slot> slots);
+    protected abstract List<Slot> getHighlightedSlots(DefaultedList<Slot> slots);
 
     public @Nullable ArrayList<String> getGroups(int group) {
         if (matcher == null) return null;

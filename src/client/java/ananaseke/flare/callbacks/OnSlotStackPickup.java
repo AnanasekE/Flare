@@ -2,7 +2,6 @@ package ananaseke.flare.callbacks;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.item.ItemStack;
 
 public interface OnSlotStackPickup {
     Event<OnSlotStackPickup> EVENT = EventFactory.createArrayBacked(OnSlotStackPickup.class,

@@ -7,7 +7,7 @@ import ananaseke.flare.dungeons.solvers.Trivia;
 public class Solvers {
     public static void initialize() {
         Blaze.initialize();
-        Trivia.initialize();
+        new Trivia();
         Riddles.initialize();
     }
 }

@@ -3,8 +3,6 @@ package ananaseke.flare;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.network.message.SentMessage;
-import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;

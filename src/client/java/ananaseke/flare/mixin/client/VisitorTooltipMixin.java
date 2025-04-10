@@ -1,6 +1,5 @@
 package ananaseke.flare.mixin.client;
 
-import ananaseke.flare.FlareClient;
 import ananaseke.flare.garden.VisitorTracker;
 import ananaseke.flare.misc.VisitorItem;
 import net.minecraft.client.MinecraftClient;
@@ -19,11 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(ItemStack.class)
 

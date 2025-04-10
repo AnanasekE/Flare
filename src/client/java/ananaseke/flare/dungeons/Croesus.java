@@ -15,7 +15,7 @@ public class Croesus extends SimpleColorSolver {
     }
 
     @Override
-    protected List<Slot> getHighlights(DefaultedList<Slot> slots) {
+    protected List<Slot> getHighlightedSlots(DefaultedList<Slot> slots) {
         return new ArrayList<>(slots.stream()
                 .filter(slot -> {
                     if (slot.getStack().getComponents().get(DataComponentTypes.LORE) == null) {

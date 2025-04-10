@@ -1,10 +1,6 @@
 package ananaseke.flare.misc;
 
-import ananaseke.flare.Flare;
-import ananaseke.flare.FlareClient;
-import ananaseke.flare.Utils.ItemUtils;
 import ananaseke.flare.Utils.Utils;
-import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.screen.slot.Slot;
@@ -33,7 +29,7 @@ public class ChocolateFactory extends SimpleColorSolver {
     }
 
     @Override
-    protected List<Slot> getHighlights(DefaultedList<Slot> slots) {
+    protected List<Slot> getHighlightedSlots(DefaultedList<Slot> slots) {
         Pattern coinsPattern = Pattern.compile("([0-9,]+) Chocolate");
         Pattern namePattern = Pattern.compile("Rabbit (Bro|Cousin|Sis|Daddy|Granny|Uncle|Dog).*");
         int bestValue = Integer.MAX_VALUE;

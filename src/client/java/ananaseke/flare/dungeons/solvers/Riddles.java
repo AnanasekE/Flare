@@ -1,15 +1,12 @@
 package ananaseke.flare.dungeons.solvers;
 
 import ananaseke.flare.FlareClient;
-import ananaseke.flare.callbacks.DungeonEnterCallback;
+import ananaseke.flare.callbacks.DungeonEvents;
 import ananaseke.flare.misc.AnnouncementManager;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.WorldEvents;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -41,9 +38,7 @@ public class Riddles {
                 messageOp = Optional.empty();
             }
         });
-        DungeonEnterCallback.EVENT.register((floor) -> {
-            npcStatements.clear();
-        });
+        DungeonEvents.ENTER.register(floor1 -> npcStatements.clear());
     }
 
 

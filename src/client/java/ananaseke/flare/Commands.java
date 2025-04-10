@@ -3,9 +3,6 @@ package ananaseke.flare;
 import ananaseke.flare.misc.FlareMessage;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.Text;
 
 public class Commands {
     public static void initialize() {
