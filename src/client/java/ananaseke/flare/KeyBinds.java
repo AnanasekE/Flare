@@ -84,6 +84,7 @@ public class KeyBinds {
         toggles.put(highlightEntitiesBox, new ToggleOption("highlightEntitiesBoxToggle", false));
         toggles.put(highlightEntitiesGlow, new ToggleOption("highlightEntitiesGlowToggle", false));
         toggles.put(highlightEntitiesColor, new ToggleOption("highlightEntitiesColorToggle", false));
+        toggles.put(devKeybind, new ToggleOption("devKeybind", false));
     }
 
     private static KeyBinding register(String name, int keyCode) {

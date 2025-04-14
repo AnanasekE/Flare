@@ -8,7 +8,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 
 import java.awt.Color;
@@ -66,8 +69,14 @@ public class RenderUtils {
 
     public static void highlightSlot(DrawContext drawContext, Slot slot) {
         highlightSlot(drawContext, slot, 0, 0x8000FF00);
+    }
 
+    public static void highlightSlot(DrawContext drawContext, Slot slot, int zOffset) {
+        highlightSlot(drawContext, slot, zOffset, 0x8000FF00);
+    }
 
+    public static void renderItemTexture(DrawContext drawContext, Slot slot, ItemStack stack, int zOffset) {
+        drawContext.drawItem(stack, slot.x, slot.y, 0, zOffset);
     }
 
 }

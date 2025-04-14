@@ -69,7 +69,7 @@ public class Ultrasequencer extends SimpleColorSolver {
                     int index2 = patternSlotIds.indexOf(slot2.id);
                     return Integer.compare(index1, index2);
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         if (correctSlots.isEmpty()) return new ArrayList<>();
         List<Slot> newList = new ArrayList<>();
