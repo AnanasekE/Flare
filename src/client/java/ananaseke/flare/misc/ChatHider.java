@@ -69,9 +69,9 @@ public class ChatHider {
 
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             String messageStr = message.getString();
-            if (!(messageStr.contains("Defense") && messageStr.contains("Mana")) || KeyBinds.devKeybind.wasPressed()) {
-                FlareClient.LOGGER.info("TEST: {}", messageStr); // FIXME
-            }
+//            if (!(messageStr.contains("Defense") && messageStr.contains("Mana")) || KeyBinds.devKeybind.wasPressed()) {
+//                FlareClient.LOGGER.info("TEST: {}", messageStr); // FIXME
+//            }
 
 
             for (MessageFilter filter : filterList) {

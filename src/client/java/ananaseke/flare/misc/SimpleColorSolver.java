@@ -23,15 +23,21 @@ public abstract class SimpleColorSolver {
     protected Matcher matcher;
     protected List<Slot> highlightSlots = new ArrayList<>();
     private final MinecraftClient client = MinecraftClient.getInstance();
+    private int translationOffset = 0;
+    private boolean shouldDrawTextures = false;
 
-    public SimpleColorSolver(@NotNull @Language("RegExp") String regex) { // TODO
+    public SimpleColorSolver(@NotNull @Language("RegExp") String regex) {
         this.pattern = Pattern.compile(regex);
 
         DrawSlotCallback.EVENT.register((drawContext, slot) -> {
             if (highlightSlots.isEmpty()) return;
             if (!(client.currentScreen instanceof GenericContainerScreen)) return;
             if (highlightSlots.stream().anyMatch(slot1 -> slot1.id == slot.id)) {
-                RenderUtils.highlightSlot(drawContext, slot);
+                if (shouldDrawTextures) {
+                    RenderUtils.renderItemTexture(drawContext, slot, slot.getStack(), translationOffset);
+                } else {
+                    RenderUtils.highlightSlot(drawContext, slot, translationOffset);
+                }
             }
         });
 
@@ -48,6 +54,16 @@ public abstract class SimpleColorSolver {
                 highlightSlots.clear();
             }
         });
+    }
+
+    public SimpleColorSolver(@NotNull @Language("RegExp") String regex, int translationOffset) {
+        this(regex);
+        this.translationOffset = translationOffset;
+    }
+
+    public SimpleColorSolver(@NotNull @Language("RegExp") String regex, int translationOffset, boolean drawTextures) {
+        this(regex, translationOffset);
+        this.shouldDrawTextures = drawTextures;
     }
 
     protected boolean test(@NotNull Screen screen) {
