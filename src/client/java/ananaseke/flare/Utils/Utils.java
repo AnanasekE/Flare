@@ -1,7 +1,7 @@
 package ananaseke.flare.Utils;
 
 import net.minecraft.client.MinecraftClient;
-import org.intellij.lang.annotations.RegExp;
+import org.intellij.lang.annotations.Language;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class Utils {
         return string.replaceAll("(§[0-9a-fklmnor])", "");
     }
 
-    public static TestRegexResult testRegex(String message, @RegExp String regex) {
+    public static TestRegexResult testRegex(String message,@Language("RegExp") String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(message);
         boolean found = matcher.find();
