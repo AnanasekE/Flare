@@ -23,6 +23,7 @@
   "text.autoconfig.flare.option.fragRunMode": "Fragrun Mode",
   "text.autoconfig.flare.option.itemRenderScale": "Hand Item Scale",
   "text.autoconfig.flare.option.disableBlockBreakParticles": "Disable block break particles",
+  "text.autoconfig.flare.option.catchFishNotificationSoundVolume": "Catch sound volume",
   "text.autoconfig.flare.category.default": "Main",
   "text.autoconfig.flare.category.Dungeons": "Dungeons",
   "text.autoconfig.flare.category.Chat Hiders": "Chat Hiders",

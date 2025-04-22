@@ -58,4 +58,6 @@ public class Config implements ConfigData {
     public boolean disableBlockBreakParticles = false;
     @ConfigEntry.Category(value = "Other")
     public boolean disableFireOverlay = false;
+    @ConfigEntry.Category(value = "Other")
+    public float catchFishNotificationSoundVolume = 1F;
 }
