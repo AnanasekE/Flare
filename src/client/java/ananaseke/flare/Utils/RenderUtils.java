@@ -15,10 +15,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 
 import java.awt.Color;
+import java.util.OptionalDouble;
 
 
 public class RenderUtils {
     static TimedOverlay timedOverlay = new TimedOverlay();
+
 
     public static void drawEntityBox(WorldRenderContext context, Entity entity, Color color) {
         Box box = entity.getBoundingBox();

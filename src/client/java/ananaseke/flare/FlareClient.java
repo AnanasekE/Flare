@@ -5,10 +5,7 @@ import ananaseke.flare.combat.Slayers;
 import ananaseke.flare.dungeons.*;
 import ananaseke.flare.fullbright.Fullbright;
 import ananaseke.flare.garden.VisitorTracker;
-import ananaseke.flare.misc.AspectOfTheVoid;
-import ananaseke.flare.misc.ChatHider;
-import ananaseke.flare.misc.ChocolateFactory;
-import ananaseke.flare.misc.Fishing;
+import ananaseke.flare.misc.*;
 import ananaseke.flare.misc.experiments.Experiments;
 import ananaseke.flare.overlays.ItemOverlays;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -49,7 +46,6 @@ public class FlareClient implements ClientModInitializer {
         new AspectOfTheVoid();
         new Experiments();
         new Fishing();
-
     }
 }
 

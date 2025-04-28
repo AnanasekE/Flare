@@ -27,6 +27,8 @@
     "SlotMixin",
     "SoundSystemMixin",
     "TooltipMixin",
-    "VisitorTooltipMixin"
+    "VisitorTooltipMixin",
+    "YggdrasilMinecraftSessionServiceMixin",
+    "YggdrasilServicesKeyInfoMixin"
   ]
 }

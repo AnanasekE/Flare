@@ -66,7 +66,7 @@ public class Slayers {
         );
 
         findEntityByName(nearbyEntities, MINIBOSS_NAMES).ifPresent(miniboss ->
-                RenderUtils.drawCenteredText(miniboss.getName().toString(), -75, drawContext)
+                RenderUtils.drawCenteredText(miniboss.getName().getString(), -75, drawContext)
         );
     }
 
