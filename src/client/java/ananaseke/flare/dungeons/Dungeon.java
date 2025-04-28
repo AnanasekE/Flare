@@ -1,18 +1,29 @@
 package ananaseke.flare.dungeons;
 
+import ananaseke.flare.FlareClient;
 import ananaseke.flare.Utils.Utils;
 import ananaseke.flare.callbacks.DungeonEvents;
 import ananaseke.flare.dungeons.solvers.terminals.Terminals;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 
 import java.util.Objects;
 
 public class Dungeon {
+    public static boolean isInDungeon = false;
+
     public static void initialize() {
 //        ScoreCalculator.initialize();
         Terminals.initialize();
         FragRunMode.initialize();
+        new DungeonHubPartyInfo();
+        new DungeonBlockClickHighlighter();
+
+        ClientPlayConnectionEvents.JOIN.register(Dungeon::onPlayerJoin);
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
             int floor = 0;
@@ -37,7 +48,7 @@ public class Dungeon {
                 if (!Objects.equals(mmGroup, "")) {
                     floor += 7;
                 }
-
+                FlareClient.LOGGER.info("Player entered a dungeon");
                 DungeonEvents.ENTER.invoker().onDungeonEntered(floor);
             }
 
@@ -46,5 +57,15 @@ public class Dungeon {
                 DungeonEvents.START.invoker().onDungeonStarted();
             }
         });
+
+
+        DungeonEvents.ENTER.register(floor -> isInDungeon = true);
+        DungeonEvents.EXIT.register(() -> isInDungeon = false);
+    }
+
+    private static void onPlayerJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
+        if (isInDungeon) {
+            DungeonEvents.EXIT.invoker().onDungeonExited();
+        }
     }
 }
