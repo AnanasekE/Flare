@@ -53,18 +53,28 @@ public class Dungeon {
             }
 
 
-            if (message.contains(Text.of("[MORT] Good Luck."))) {
+//            if (message.contains(Text.of("[MORT] Good Luck."))) {
+//                DungeonEvents.START.invoker().onDungeonStarted();
+//            }
+        });
+
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            Utils.TestRegexResult result = Utils.testRegex(message.getString(), "^\\[MORT] Good Luck\\.$");
+            if (result.isMatching) {
+                FlareClient.LOGGER.info("mort says good luck");
                 DungeonEvents.START.invoker().onDungeonStarted();
             }
         });
 
 
-        DungeonEvents.ENTER.register(floor -> isInDungeon = true);
+//        DungeonEvents.ENTER.register(floor -> isInDungeon = true);
+        DungeonEvents.START.register(() -> isInDungeon = true);
         DungeonEvents.EXIT.register(() -> isInDungeon = false);
     }
 
     private static void onPlayerJoin(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
         if (isInDungeon) {
+            FlareClient.LOGGER.info("EXITING DUNGEON");
             DungeonEvents.EXIT.invoker().onDungeonExited();
         }
     }

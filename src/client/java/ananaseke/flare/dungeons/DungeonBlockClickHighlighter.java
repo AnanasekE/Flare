@@ -15,10 +15,17 @@ import net.minecraft.item.ItemUsageContext;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class DungeonBlockClickHighlighter {
     private static final Map<Waypoint, Integer> waypointCooldowns = new HashMap<>();
+    private static final List<Block> blocksToHighlight = List.of(
+            Blocks.CHEST,
+            Blocks.TRAPPED_CHEST,
+            Blocks.LEVER,
+            Blocks.PLAYER_HEAD
+    );
 
     public DungeonBlockClickHighlighter() {
         ItemUsedOnBlock.EVENT.register(DungeonBlockClickHighlighter::onItemUsed);
@@ -28,7 +35,8 @@ public class DungeonBlockClickHighlighter {
 
     private static void onItemUsed(ItemUsageContext context) {
         if (!context.getWorld().isClient) return;
-        if (!Dungeon.isInDungeon) return;
+//        FlareClient.LOGGER.info("CLICKED ON BLOCK");
+//        if (!Dungeon.isInDungeon) return;
         FlareClient.LOGGER.info("CLICKED");
         Block block = context.getWorld().getBlockState(context.getBlockPos()).getBlock();
         FlareClient.LOGGER.info(block.getName().toString());

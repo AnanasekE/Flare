@@ -32,4 +32,13 @@ public class ItemUtils {
         }
         return Optional.empty();
     }
+
+    public static Optional<NbtComponent> getCustomData(ItemStack stack) {
+        if (stack.getComponents().get(DataComponentTypes.CUSTOM_DATA) != null) {
+            @Nullable NbtComponent customData = stack.getComponents().get(DataComponentTypes.CUSTOM_DATA);
+            if (customData == null) return Optional.empty();
+            return Optional.of(customData);
+        }
+        return Optional.empty();
+    }
 }

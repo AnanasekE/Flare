@@ -47,21 +47,18 @@ public class HighlightStarredMobs {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.world == null) return;
             client.world.getEntities().forEach(entity -> {
-                if (entity instanceof ArmorStandEntity && entity.getName().getString().contains("✯")) {
-//                    if (!entities.contains(entity)) {
+                if (entity instanceof ArmorStandEntity && entity.getName().getString().startsWith("✯ ")) {
                     RenderUtils.drawBox(worldRenderContext, new Box(0.5, 2, 0.5, -0.5, 0, -0.5).offset(entity.getPos()).offset(new Vec3d(0, -2, 0)), Color.RED);
-
-//                    }
                 }
             });
-            try {
+//            try {
                 entities.forEach(entity -> {
                     if (entity instanceof ArmorStandEntity armorStandEntity && armorStandEntity.isDead()) {
                         entities.remove(entity);
                     }
                 });
-            } catch (Exception ignored) {
-            }
+//            } catch (Exception ignored) {
+//            }
 //            entities.forEach(entity -> {
 //                RenderUtils.drawBox(worldRenderContext, new Box(0.5, 2, 0.5, -0.5, 0, -0.5).offset(entity.getPos()).offset(new Vec3d(0, -2, 0)), Color.RED);
 //            });

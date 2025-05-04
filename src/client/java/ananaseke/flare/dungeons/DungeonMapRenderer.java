@@ -11,14 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapDecoration;
-import net.minecraft.item.map.MapDecorationTypes;
 import net.minecraft.item.map.MapState;
-import net.minecraft.text.Text;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class DungeonMapRenderer {
     static MinecraftClient client;
@@ -43,50 +36,26 @@ public class DungeonMapRenderer {
             float scale = 1.5F;
             matrixStack.scale(scale, scale, 1);
 
-            if (stack.getItem() instanceof FilledMapItem || cachedMapItemStack != null) {
-                MapState mapState;
-
-                if (stack.getItem() instanceof FilledMapItem) {
-                    mapState = FilledMapItem.getMapState(stack, client.world);
-                } else {
-                    mapState = FilledMapItem.getMapState(cachedMapItemStack, client.world);
-                }
-
-                if (mapState == null) return;
-                Iterable<MapDecoration> defaultDecorations = mapState.getDecorations();
-                List<MapDecoration> changedDecorations = new ArrayList<>();
-
-                for (MapDecoration decoration : defaultDecorations) {
-                    if (decoration.type() == MapDecorationTypes.PLAYER) {
-                        decoration = new MapDecoration(MapDecorationTypes.BANNER_CYAN, decoration.x(), decoration.z(), decoration.rotation(), Optional.of(Text.of("PLAYER1")));
-                    }
-                    changedDecorations.add(decoration);
-                }
-
-                mapState.replaceDecorations(changedDecorations);
-
-                if (stack.getItem() instanceof FilledMapItem) {
-                    cachedMapItemStack = stack;
-                    mapRenderer.draw(
-                            matrixStack,
-                            drawContext.getVertexConsumers(),
-                            defaultMapIdComponent,
-                            mapState,
-                            false,
-                            15
-                    );
-
-                } else {
-                    if (cachedMapItemStack == null) return;
-                    mapRenderer.draw(
-                            matrixStack,
-                            drawContext.getVertexConsumers(),
-                            defaultMapIdComponent,
-                            mapState,
-                            false,
-                            15
-                    );
-                }
+            if (stack.getItem() instanceof FilledMapItem) {
+                cachedMapItemStack = stack;
+                mapRenderer.draw(
+                        matrixStack,
+                        drawContext.getVertexConsumers(),
+                        defaultMapIdComponent,
+                        FilledMapItem.getMapState(stack, client.world),
+                        false,
+                        15
+                );
+            } else {
+                if (cachedMapItemStack == null) return;
+                mapRenderer.draw(
+                        matrixStack,
+                        drawContext.getVertexConsumers(),
+                        defaultMapIdComponent,
+                        FilledMapItem.getMapState(cachedMapItemStack, client.world),
+                        false,
+                        15
+                );
             }
         } catch (Exception e) {
 //            LOGGER.error("Error rendering map: {}", e.getMessage());

@@ -25,6 +25,7 @@ public class KeyBinds {
     public static KeyBinding highlightEntitiesColor;
     public static KeyBinding fragRunModeKeybind;
     public static KeyBinding openConfigScreen;
+    public static KeyBinding openWardrobe;
 
 
     private static final Map<KeyBinding, ToggleOption> toggles = new HashMap<>();
@@ -63,6 +64,7 @@ public class KeyBinds {
             if (client.player == null) return;
             processKey(openEChestKeybind, () -> client.player.networkHandler.sendCommand("ec"));
             processKey(openPetMenu, () -> client.player.networkHandler.sendCommand("pets"));
+            processKey(openWardrobe, () -> client.player.networkHandler.sendCommand("wardrobe"));
 
         });
     }
@@ -72,6 +74,7 @@ public class KeyBinds {
         devKeybind = register("dev", GLFW.GLFW_KEY_GRAVE_ACCENT);
         openEChestKeybind = register("open_ec", GLFW.GLFW_KEY_B);
         openPetMenu = register("open_pet_menu", GLFW.GLFW_KEY_N);
+        openWardrobe = register("open_wardrobe", GLFW.GLFW_KEY_G);
         highlightEntitiesGlow = register("highlight_entities_glow", GLFW.GLFW_KEY_HOME);
         highlightEntitiesBox = register("highlight_entities", GLFW.GLFW_KEY_HOME);
         highlightEntitiesColor = register("highlight_entities_color", GLFW.GLFW_KEY_MINUS);

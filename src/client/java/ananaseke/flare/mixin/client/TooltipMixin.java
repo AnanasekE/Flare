@@ -2,6 +2,7 @@ package ananaseke.flare.mixin.client;
 
 import ananaseke.flare.Utils.ItemPriceUtils;
 import ananaseke.flare.Utils.ItemUtils;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,6 +29,22 @@ public class TooltipMixin {
 
 //        minecraft:custom_data=>{enchantments:{infinite_quiver:6},id:"ENCHANTED_BOOK",timestamp:1720599363052L,uuid:"289a835d-1ddc-4930-a822-e7870411da23"}
 //        "product_id":"ENCHANTMENT_INFINITE_QUIVER_10"
+        Optional<NbtComponent> customData = ItemUtils.getCustomData(stack);
+        if (customData.isPresent()) {
+            NbtComponent data = customData.get();
+            data.apply(customDataComponent -> {
+                Integer componentData = customDataComponent.getInt("baseStatBoostPercentage");
+                if (componentData != null) {
+                    if (!componentData.equals(0)) {
+                        if (componentData == 50) {
+                            outList.add(Text.of("§5" + "Quality: " + "§a" + componentData.toString() + "%"));
+                        } else {
+                            outList.add(Text.of("§5" + "Quality: " + "§c" + componentData.toString() + "%"));
+                        }
+                    }
+                }
+            });
+        }
 
         if (optionalInternalName.isEmpty()) return;
         String internalName = optionalInternalName.get();
