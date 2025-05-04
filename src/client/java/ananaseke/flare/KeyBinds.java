@@ -26,6 +26,7 @@ public class KeyBinds {
     public static KeyBinding fragRunModeKeybind;
     public static KeyBinding openConfigScreen;
     public static KeyBinding openWardrobe;
+    public static KeyBinding openEquipment;
 
 
     private static final Map<KeyBinding, ToggleOption> toggles = new HashMap<>();
@@ -65,6 +66,7 @@ public class KeyBinds {
             processKey(openEChestKeybind, () -> client.player.networkHandler.sendCommand("ec"));
             processKey(openPetMenu, () -> client.player.networkHandler.sendCommand("pets"));
             processKey(openWardrobe, () -> client.player.networkHandler.sendCommand("wardrobe"));
+            processKey(openEquipment, () -> client.player.networkHandler.sendCommand("eq"));
 
         });
     }
@@ -75,6 +77,7 @@ public class KeyBinds {
         openEChestKeybind = register("open_ec", GLFW.GLFW_KEY_B);
         openPetMenu = register("open_pet_menu", GLFW.GLFW_KEY_N);
         openWardrobe = register("open_wardrobe", GLFW.GLFW_KEY_G);
+        openEquipment = register("open_equipment", GLFW.GLFW_MOUSE_BUTTON_4, InputUtil.Type.MOUSE);
         highlightEntitiesGlow = register("highlight_entities_glow", GLFW.GLFW_KEY_HOME);
         highlightEntitiesBox = register("highlight_entities", GLFW.GLFW_KEY_HOME);
         highlightEntitiesColor = register("highlight_entities_color", GLFW.GLFW_KEY_MINUS);
@@ -91,9 +94,13 @@ public class KeyBinds {
     }
 
     private static KeyBinding register(String name, int keyCode) {
+        return register(name, keyCode, InputUtil.Type.KEYSYM);
+    }
+
+    private static KeyBinding register(String name, int keyCode, InputUtil.Type inputType) {
         return KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.flare." + name,
-                InputUtil.Type.KEYSYM,
+                inputType,
                 keyCode,
                 "category.flare.main"
         ));
