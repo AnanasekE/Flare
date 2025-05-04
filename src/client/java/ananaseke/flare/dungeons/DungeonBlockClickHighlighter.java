@@ -20,12 +20,12 @@ import java.util.Map;
 
 public class DungeonBlockClickHighlighter {
     private static final Map<Waypoint, Integer> waypointCooldowns = new HashMap<>();
-    private static final List<Block> blocksToHighlight = List.of(
-            Blocks.CHEST,
-            Blocks.TRAPPED_CHEST,
-            Blocks.LEVER,
-            Blocks.PLAYER_HEAD
-    );
+//    private static final List<Block> blocksToHighlight = List.of(
+//            Blocks.CHEST,
+//            Blocks.TRAPPED_CHEST,
+//            Blocks.LEVER,
+//            Blocks.PLAYER_HEAD
+//    );
 
     public DungeonBlockClickHighlighter() {
         ItemUsedOnBlock.EVENT.register(DungeonBlockClickHighlighter::onItemUsed);

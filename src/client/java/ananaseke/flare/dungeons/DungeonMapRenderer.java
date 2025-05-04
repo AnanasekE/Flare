@@ -11,7 +11,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapState;
 
 public class DungeonMapRenderer {
     static MinecraftClient client;

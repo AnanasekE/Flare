@@ -49,11 +49,11 @@ public class TooltipMixin {
         if (optionalInternalName.isEmpty()) return;
         String internalName = optionalInternalName.get();
 
-        if (internalName.equals("ENCHANTED_BOOK")) {
-            if (ItemUtils.getEnchantments(stack).isPresent()) {
+//        if (internalName.equals("ENCHANTED_BOOK")) {
+//            if (ItemUtils.getEnchantments(stack).isPresent()) {
 //                FlareClient.LOGGER.info("Enchantments: " + ItemUtils.getEnchantments(stack).get());
-            }
-        }
+//            }
+//        }
 
         ItemPriceUtils.getBazaarItemBuyPrice(internalName).ifPresent(price -> {
             float newPrice = price;
